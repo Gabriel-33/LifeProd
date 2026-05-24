@@ -206,21 +206,21 @@ export default function CurriculoIAPage() {
               <Button 
                 onClick={gerarCurriculo} 
                 disabled={loading}
-                className="flex-1 bg-purple-600 hover:bg-purple-700"
+                className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Gerando currículo...
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Gerando currículo...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Gerar Currículo com IA
+                    <Sparkles className="w-4 h-4" />
+                    <span>Gerar Currículo com IA</span>
                   </>
                 )}
               </Button>
-              <Button onClick={limparFormulario} variant="outline">
+              <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
                 Limpar
               </Button>
             </div>

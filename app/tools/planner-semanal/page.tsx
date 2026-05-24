@@ -250,6 +250,15 @@ Retorne APENAS o JSON solicitado.`;
     }
   }
 
+  function limparFormulario() {
+    setObjetivos('');
+    setHorasDia('');
+    setCompromissosFixos('');
+    setPlanejamento(null);
+    setSemanaAtual(0);
+    setError(null);
+  }
+
   const diasSemana = planejamento?.dias || [];
 
   return (
@@ -308,31 +317,34 @@ Retorne APENAS o JSON solicitado.`;
                 rows={2}
               />
             </div>
-
-            <Button 
-              onClick={gerarPlanejamento} 
-              disabled={loading}
-              size="lg"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-base py-6"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Gerando planejamento semanal...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Gerar Planner com IA
-                </>
+            <div className="flex gap-3 pt-2">
+              <Button 
+                onClick={gerarPlanejamento} 
+                disabled={loading || objetivos.length === 0 || horasDia.length === 0}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Gerando planejamento semanal...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    Gerar Planner com IA
+                  </>
+                )}
+              </Button>
+              <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
+                Limpar
+              </Button>
+              
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-base">
+                  {error}
+                </div>
               )}
-            </Button>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-base">
-                {error}
-              </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       )}

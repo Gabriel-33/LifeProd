@@ -190,23 +190,22 @@ Retorne APENAS o JSON solicitado.`;
             <div className="flex gap-4 pt-4">
               <Button 
                 onClick={gerarBio} 
-                disabled={loading}
-                size="lg"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-base py-6"
+                disabled={loading || formData.profissao.length === 0}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     Gerando bio...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-5 h-5 mr-2" />
+                    <Sparkles className="w-4 h-4" />
                     Gerar Bio com IA
                   </>
                 )}
               </Button>
-              <Button onClick={limparFormulario} variant="outline" size="lg">
+              <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
                 Limpar
               </Button>
             </div>

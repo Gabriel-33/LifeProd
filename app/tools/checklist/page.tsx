@@ -18,6 +18,7 @@ import {
   Save,
   RefreshCw
 } from 'lucide-react';
+import { describe } from 'node:test';
 
 interface Tarefa {
   id: string;
@@ -159,7 +160,7 @@ export default function ChecklistPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
         
         {/* Formulário de adicionar tarefa */}
         <Card className="lg:col-span-1">
@@ -204,22 +205,21 @@ export default function ChecklistPage() {
               />
             </div>
 
-            <Button onClick={adicionarTarefa} className="w-full bg-green-600 hover:bg-green-700">
+            <Button onClick={adicionarTarefa} disabled={loading || novaTarefa.length === 0} className="w-full bg-green-600 hover:bg-green-700">
               Adicionar tarefa
             </Button>
           </CardContent>
         </Card>
 
         {/* Lista de tarefas */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <Card className="lg:col-span-1">
+          <CardHeader className="p-3">
+            <div className="flex-col flex-center justify-center sm:flex-row sm:items-center sm:justify-center gap-4">
               <CardTitle className="flex items-center gap-2 text-xl">
-                <CheckSquare className="w-5 h-5 text-green-500" />
                 Minhas tarefas
               </CardTitle>
               
-              <div className="flex gap-2">
+              <div className="flex gap-1 items-center justify-center">
                 <Button 
                   variant={filtro === 'todas' ? 'default' : 'outline'} 
                   size="sm"
@@ -242,7 +242,7 @@ export default function ChecklistPage() {
                   onClick={() => setFiltro('concluidas')}
                   className={filtro === 'concluidas' ? 'bg-green-600' : ''}
                 >
-                  Concluídas
+                  Feitas
                 </Button>
               </div>
             </div>

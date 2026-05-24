@@ -41,7 +41,7 @@ export default function JurosPage() {
         <p className="text-gray-500 mt-1">Simule investimentos e financiamentos</p>
       </div>
 
-      <div className="grid grid-cols-1">
+      <div className="space-y-1 grid grid-cols-1">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -84,11 +84,12 @@ export default function JurosPage() {
               />
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={calcularJuros} className="flex-1 bg-green-600 hover:bg-green-700">
+              <Button onClick={calcularJuros} disabled={periodo.length === 0 || taxa.length === 0 || valor.length === 0} 
+                title="Insira as informações" className="flex-1 bg-green-600 hover:bg-green-700">
                 Calcular
               </Button>
-              <Button onClick={limpar} variant="outline" size="sm">
-                <RotateCcw className="w-4 h-4" />
+              <Button onClick={limpar} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
+                Limpar
               </Button>
             </div>
           </CardContent>

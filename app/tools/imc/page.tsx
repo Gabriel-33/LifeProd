@@ -59,7 +59,7 @@ export default function IMCPage() {
         <p className="text-gray-500 mt-1">Calcule seu Índice de Massa Corporal</p>
       </div>
 
-      <div className="grid grid-cols-1">
+      <div className="space-y-1 grid grid-cols-1">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -91,11 +91,12 @@ export default function IMCPage() {
               />
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={calcularIMC} className="flex-1 bg-blue-600 hover:bg-blue-700">
+              <Button onClick={calcularIMC} title="Insira as informações" 
+               disabled={altura.length === 0 || peso.length === 0} className="flex-1 bg-blue-600 hover:bg-blue-700">
                 Calcular IMC
               </Button>
-              <Button onClick={limpar} variant="outline" size="sm">
-                <RotateCcw className="w-4 h-4" />
+              <Button onClick={limpar} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
+                Limpar
               </Button>
             </div>
           </CardContent>

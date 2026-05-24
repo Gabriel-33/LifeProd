@@ -335,13 +335,12 @@ async function gerarPlano() {
             <div className="flex gap-4 pt-4">
               <Button 
                 onClick={gerarPlano} 
-                disabled={loading || materias.length === 0}
-                size="lg"
-                className="flex-1 bg-purple-600 hover:bg-purple-700 text-base py-6"
+                disabled={loading || materias.length == 0}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     Gerando plano de estudos...
                   </>
                 ) : (
@@ -351,7 +350,7 @@ async function gerarPlano() {
                   </>
                 )}
               </Button>
-              <Button onClick={limparFormulario} variant="outline" size="lg">
+              <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
                 Limpar
               </Button>
             </div>

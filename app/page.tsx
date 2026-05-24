@@ -14,7 +14,8 @@ import {
   X,
   Mail,
   Activity,
-  Type
+  Type,
+  Timeline
 } from 'lucide-react';
 
 const tools = [
@@ -23,8 +24,9 @@ const tools = [
   { name: 'Organizador Estudos', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
   { name: 'Planner Semanal', href: 'tools/planner-semanal', icon: Calendar, color: 'bg-orange-500', category: 'Produtividade' },
   { name: 'Checklist', href: 'tools/checklist', icon: CheckSquare, color: 'bg-teal-500', category: 'Produtividade' },
-  { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Finanças' },
-  { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'Saúde' },
+  { name: 'Streek de hábitos', href: 'tools/streek-habits', icon: Timeline, color: 'bg-red-500', category: 'Produtividade' },
+  { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Utilidades' },
+  { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'Utilidades' },
   { name: 'Contador Caracteres', href: 'tools/contador-caracteres', icon: Type, color: 'bg-gray-500', category: 'Utilidades' },
 ];
 
@@ -74,26 +76,90 @@ export default function Home() {
       {/* Ferramentas */}
       <section id="ferramentas" className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Ferramentas</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tools.map((tool) => (
-              <Link href={tool.href} key={tool.name}>
-                <Card className="hover:shadow-lg transition cursor-pointer h-full">
-                  <CardHeader>
-                    <div className={`w-12 h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
-                      <tool.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <CardTitle>{tool.name}</CardTitle>
-                    <CardDescription>Clique para usar</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
-                      {tool.category}
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+          <h2 className="text-3xl text-gray-800 font-bold text-center mb-12">Ferramentas</h2>
+          
+          {/* Seção 1: Inteligência Artificial */}
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-1 h-8 bg-purple-500 rounded-full"></div>
+              <h3 className="text-2xl font-semibold text-gray-800">Inteligência Artificial</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tools.filter(tool => tool.category === 'IA').map((tool) => (
+                <Link href={tool.href} key={tool.name}>
+                  <Card className="hover:shadow-lg transition cursor-pointer h-full">
+                    <CardHeader>
+                      <div className={`w-12 h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
+                        <tool.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle>{tool.name}</CardTitle>
+                      <CardDescription>Gerado com IA</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700">
+                        {tool.category}
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Seção 2: Produtividade */}
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-1 h-8 bg-green-500 rounded-full"></div>
+              <h3 className="text-2xl font-semibold text-gray-800">Produtividade</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tools.filter(tool => tool.category === 'Produtividade').map((tool) => (
+                <Link href={tool.href} key={tool.name}>
+                  <Card className="hover:shadow-lg transition cursor-pointer h-full">
+                    <CardHeader>
+                      <div className={`w-12 h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
+                        <tool.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle>{tool.name}</CardTitle>
+                      <CardDescription>Organize seu dia</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                        {tool.category}
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Seção 3: Utilidades */}
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-1 h-8 bg-gray-500 rounded-full"></div>
+              <h3 className="text-2xl font-semibold text-gray-800">Utilidades</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {tools.filter(tool => tool.category === 'Utilidades').map((tool) => (
+                <Link href={tool.href} key={tool.name}>
+                  <Card className="hover:shadow-lg transition cursor-pointer h-full">
+                    <CardHeader>
+                      <div className={`w-12 h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
+                        <tool.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <CardTitle>{tool.name}</CardTitle>
+                      <CardDescription>Ferramentas rápidas</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+                        {tool.category}
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
