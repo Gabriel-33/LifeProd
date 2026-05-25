@@ -24,6 +24,7 @@ LifeProd é uma plataforma completa de ferramentas inteligentes para organizar s
 | Ferramenta | Descrição |
 |------------|-----------|
 | **Planner Semanal** | Organize sua semana com planejamento inteligente |
+| **Contador de streak** | Monitore a evolução dos seus bons hábitos!|
 | **Checklist Diário** | Acompanhe suas tarefas com prioridades |
 
 ###  Ferramentas
