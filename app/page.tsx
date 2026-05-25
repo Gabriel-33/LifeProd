@@ -15,7 +15,7 @@ import {
   Mail,
   Activity,
   Type,
-  Timeline
+  CalendarClock
 } from 'lucide-react';
 
 const tools = [
@@ -24,7 +24,7 @@ const tools = [
   { name: 'Organizador Estudos', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
   { name: 'Planner Semanal', href: 'tools/planner-semanal', icon: Calendar, color: 'bg-orange-500', category: 'Produtividade' },
   { name: 'Checklist', href: 'tools/checklist', icon: CheckSquare, color: 'bg-teal-500', category: 'Produtividade' },
-  { name: 'Streek de hábitos', href: 'tools/streek-habits', icon: Timeline, color: 'bg-red-500', category: 'Produtividade' },
+  { name: 'Streek de hábitos', href: 'tools/streak-habitos', icon: CalendarClock, color: 'bg-red-500', category: 'Produtividade' },
   { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Utilidades' },
   { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'Utilidades' },
   { name: 'Contador Caracteres', href: 'tools/contador-caracteres', icon: Type, color: 'bg-gray-500', category: 'Utilidades' },
