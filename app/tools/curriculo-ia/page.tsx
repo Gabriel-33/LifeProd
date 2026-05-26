@@ -62,6 +62,7 @@ export default function CurriculoIAPage() {
     nome: '',
     dataNascimento: '',
     endereco: '',
+    email:'',
     profissao: '',
     habilidades: '',
     nivel: 'pleno',
@@ -261,6 +262,7 @@ export default function CurriculoIAPage() {
       {
         nome: formData.nome,
         profissao: formData.profissao,
+        email: formData.email,
         nivel: formData.nivel,
         dataNascimento: formData.dataNascimento,
         endereco: formData.endereco,
@@ -289,6 +291,7 @@ export default function CurriculoIAPage() {
       nome: '',
       dataNascimento: '',
       endereco: '',
+      email:'',
       profissao: '',
       habilidades: '',
       nivel: 'pleno',
@@ -331,7 +334,7 @@ export default function CurriculoIAPage() {
               <div>
                 <Label>Nome completo *</Label>
                 <Input
-                  placeholder="Ex: Gabriel Ennos da Silva"
+                  placeholder="Ex: Gustavo Costa Silva"
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                   className="mt-1"
@@ -358,8 +361,18 @@ export default function CurriculoIAPage() {
               />
             </div>
 
+            <div>
+              <Label>Email pessoal completo *</Label>
+              <Input
+                placeholder="Ex: JoãoCrispim@gmail.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            
             {/* Redes Sociais - DINÂMICO */}
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 text-black">
               <Label className="font-semibold mb-2 block"> Redes Sociais</Label>
               {redesSociais.map((rede) => (
                 <div key={rede.id} className="flex items-center gap-2 mb-2">
@@ -372,15 +385,15 @@ export default function CurriculoIAPage() {
                   </Button>
                 </div>
               ))}
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 text-gray-400">
                 <select
                   value={novaRedeTipo}
                   onChange={(e) => setNovaRedeTipo(e.target.value as any)}
                   className="px-3 py-2 border rounded-lg"
                 >
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="github">GitHub</option>
-                  <option value="instagram">Instagram</option>
+                  <option value="linkedin" className='text-black'>LinkedIn</option>
+                  <option value="github" className='text-black'>GitHub</option>
+                  <option value="instagram" className='text-black'>Instagram</option>
                 </select>
                 <Input
                   placeholder="URL completa"
@@ -410,7 +423,7 @@ export default function CurriculoIAPage() {
                 <select
                   value={formData.nivel}
                   onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 border rounded-lg"
+                  className="w-full mt-1 px-3 py-2 border rounded-lg text-gray-400"
                 >
                   {niveis.map((n) => (
                     <option key={n.value} value={n.value}>{n.label}</option>
@@ -438,7 +451,7 @@ export default function CurriculoIAPage() {
               </Label>
               {experiencias.map((exp) => (
                 <div key={exp.id} className="bg-gray-50 p-3 rounded-lg mb-2">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start text-black">
                     <div>
                       <p className="font-semibold">{exp.cargo} @ {exp.empresa}</p>
                       <p className="text-sm text-gray-500">{exp.dataInicio} - {exp.dataFim || 'atual'}</p>
@@ -450,14 +463,14 @@ export default function CurriculoIAPage() {
                   </div>
                 </div>
               ))}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                 <Input placeholder="Empresa" value={novaExperiencia.empresa} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, empresa: e.target.value })} />
                 <Input placeholder="Cargo" value={novaExperiencia.cargo} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, cargo: e.target.value })} />
                 <Input placeholder="Mês/Ano início" value={novaExperiencia.dataInicio} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataInicio: e.target.value })} />
                 <Input placeholder="Mês/Ano fim (ou 'atual')" value={novaExperiencia.dataFim} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataFim: e.target.value })} />
                 <Textarea placeholder="Descrição das atividades" className="md:col-span-2" value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
-                <Button onClick={adicionarExperiencia} variant="outline" className="md:col-span-2">
-                  <Plus className="w-4 h-4 mr-2" /> Adicionar Experiência
+                <Button onClick={adicionarExperiencia} variant="outline" className="flex w-15">
+                  <Plus className="w-6 h-6" />
                 </Button>
               </div>
             </div>
@@ -470,7 +483,7 @@ export default function CurriculoIAPage() {
               </Label>
               {educacoes.map((edu) => (
                 <div key={edu.id} className="bg-gray-50 p-3 rounded-lg mb-2">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start text-black">
                     <div>
                       <p className="font-semibold">{edu.curso}</p>
                       <p className="text-sm text-gray-500">{edu.instituicao}</p>
@@ -482,13 +495,13 @@ export default function CurriculoIAPage() {
                   </div>
                 </div>
               ))}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                 <Input placeholder="Instituição" value={novaEducacao.instituicao} onChange={(e) => setNovaEducacao({ ...novaEducacao, instituicao: e.target.value })} />
                 <Input placeholder="Curso" value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
                 <Input placeholder="Mês/Ano início" value={novaEducacao.dataInicio} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataInicio: e.target.value })} />
                 <Input placeholder="Mês/Ano fim" value={novaEducacao.dataFim} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataFim: e.target.value })} />
-                <Button onClick={adicionarEducacao} variant="outline" className="md:col-span-2">
-                  <Plus className="w-4 h-4 mr-2" /> Adicionar Formação
+                <Button onClick={adicionarEducacao} variant="outline" className="flex w-15">
+                  <Plus className="w-6 h-6" />
                 </Button>
               </div>
             </div>
@@ -500,7 +513,7 @@ export default function CurriculoIAPage() {
                 Idiomas
               </Label>
               {idiomas.map((idioma) => (
-                <div key={idioma.id} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg mb-2">
+                <div key={idioma.id} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg mb-2 text-black">
                   <span>{idioma.nome} - <span className="capitalize">{idioma.nivel}</span></span>
                   <Button variant="ghost" size="sm" onClick={() => removerIdioma(idioma.id)}>
                     <Trash2 className="w-4 h-4 text-red-500" />
@@ -509,7 +522,7 @@ export default function CurriculoIAPage() {
               ))}
               <div className="flex gap-2 mt-2">
                 <Input placeholder="Idioma (ex: Inglês)" value={novoIdioma.nome} onChange={(e) => setNovoIdioma({ ...novoIdioma, nome: e.target.value })} className="flex-1" />
-                <select value={novoIdioma.nivel} onChange={(e) => setNovoIdioma({ ...novoIdioma, nivel: e.target.value as any })} className="px-3 py-2 border rounded-lg">
+                <select value={novoIdioma.nivel} onChange={(e) => setNovoIdioma({ ...novoIdioma, nivel: e.target.value as any })} className="px-3 py-2 border rounded-lg text-gray-400">
                   <option value="basico">Básico</option>
                   <option value="intermediario">Intermediário</option>
                   <option value="avancado">Avançado</option>
@@ -528,7 +541,7 @@ export default function CurriculoIAPage() {
                 Projetos
               </Label>
               {projetos.map((projeto) => (
-                <div key={projeto.id} className="bg-gray-50 p-3 rounded-lg mb-2">
+                <div key={projeto.id} className="bg-gray-50 p-3 rounded-lg mb-2 text-black">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <p className="font-semibold">{projeto.nome}</p>
@@ -545,16 +558,16 @@ export default function CurriculoIAPage() {
                 <Input placeholder="Nome do projeto" value={novoProjeto.nome} onChange={(e) => setNovoProjeto({ ...novoProjeto, nome: e.target.value })} />
                 <Textarea placeholder="Descrição do projeto" value={novoProjeto.descricao} onChange={(e) => setNovoProjeto({ ...novoProjeto, descricao: e.target.value })} rows={2} />
                 <Input placeholder="Link do projeto (GitHub, deploy...)" value={novoProjeto.link} onChange={(e) => setNovoProjeto({ ...novoProjeto, link: e.target.value })} />
-                <Button onClick={adicionarProjeto} variant="outline" className="w-full">
-                  <Plus className="w-4 h-4 mr-2" /> Adicionar Projeto
+                <Button onClick={adicionarProjeto} variant="outline" className="flex w-15">
+                  <Plus className="w-6 h-6" />
                 </Button>
               </div>
             </div>
 
             {/* Botões de ação */}
             <div className="flex gap-4 pt-4">
-              <Button onClick={gerarCurriculo} disabled={loading} className="flex-1 bg-purple-600 hover:bg-purple-700">
-                {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+              <Button onClick={gerarCurriculo} disabled={loading} className="flex flex-1 bg-purple-600 hover:bg-purple-700">
+                {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="flex w-4 h-4 mr-2" />}
                 {loading ? 'Gerando...' : 'Gerar Currículo com IA'}
               </Button>
               <Button onClick={limparFormulario} variant="outline" className="flex-1">Limpar tudo</Button>

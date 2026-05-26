@@ -31,8 +31,7 @@ export async function generatePDF(
   // ── Cabeçalho ──
   doc.setFillColor(...azul);
   doc.rect(0, 0, 210, 45, 'F');
-  doc.setFillColor(...roxo);
-  doc.rect(140, 0, 70, 45, 'F');
+  
 
   doc.setTextColor(...branco);
   doc.setFontSize(24);
@@ -41,11 +40,11 @@ export async function generatePDF(
 
   doc.setFontSize(13);
   doc.setFont('helvetica', 'normal');
-  doc.text(`${formData.profissao}  •  Nível: ${formData.nivel.charAt(0).toUpperCase() + formData.nivel.slice(1)}`, margemEsq, 35);
+  doc.text(`${formData.profissao}  •  Nível: ${formData.nivel.charAt(0).toUpperCase() + formData.nivel.slice(1)} •  ${formData.email}`, margemEsq, 35);
 
   doc.setFontSize(9);
-  doc.setTextColor(200, 210, 255);
-  doc.text('Gerado com LifeProd IA', margemDir - 5, 40, { align: 'right' });
+
+  //doc.text('Gerado com LifeProd IA', margemDir - 5, 40, { align: 'right' });
 
   y = 55;
 

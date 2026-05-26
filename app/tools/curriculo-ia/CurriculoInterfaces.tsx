@@ -46,6 +46,7 @@ export interface FormDataPDF {
   nome: string;
   dataNascimento: string;
   endereco: string;
+  email: string;
   profissao: string;
   habilidades?: string;
   nivel: string;
