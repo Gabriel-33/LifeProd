@@ -7,6 +7,9 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
+import {generatePDF} from './GeneratePdf';
+import {CurriculoResultado, FormDataPDF, RedeSocial, Experiencia, Educacao, Idioma, Projeto} from './CurriculoInterfaces';
+
 import { 
   FileText, 
   Loader2, 
@@ -23,50 +26,6 @@ import {
   Globe,
   FolderGit2
 } from 'lucide-react';
-
-// ─── Interfaces ─────────────────────────────────────────────────────────────
-interface CurriculoResultado {
-  resumoProfissional: string;
-  habilidadesPrincipais: string[];
-  descricoesMelhoradas: string;
-  palavrasChaveATS: string[];
-}
-
-interface RedeSocial {
-  id: string;
-  tipo: 'linkedin' | 'github' | 'instagram';
-  url: string;
-}
-
-interface Experiencia {
-  id: string;
-  empresa: string;
-  cargo: string;
-  dataInicio: string;
-  dataFim: string;
-  descricao: string;
-}
-
-interface Educacao {
-  id: string;
-  instituicao: string;
-  curso: string;
-  dataInicio: string;
-  dataFim: string;
-}
-
-interface Idioma {
-  id: string;
-  nome: string;
-  nivel: 'basico' | 'intermediario' | 'avancado' | 'fluente';
-}
-
-interface Projeto {
-  id: string;
-  nome: string;
-  descricao: string;
-  link: string;
-}
 
 // ─── Componente Principal ──────────────────────────────────────────────────
 export default function CurriculoIAPage() {
@@ -292,328 +251,33 @@ export default function CurriculoIAPage() {
     }
   }
 
-  // ─── Construtor PDF (simplificado) ─────────────────────────────────────────
-
-    async function baixarPDF(
-      resultado: CurriculoResultado,
-      redesSociais: RedeSocial[],
-      experiencias: Experiencia[],
-      educacoes: Educacao[],
-      idiomas: Idioma[],
-      projetos: Projeto[]
-    ) {
-      // Carrega jsPDF dinamicamente
-      const { jsPDF } = await import('jspdf');
-
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-
-      const margemEsq = 20;
-      const margemDir = 190;
-      const larguraUtil = margemDir - margemEsq;
-      let y = 20;
-
-      // Cores
-      const azul: [number, number, number] = [37, 99, 235];
-      const roxo: [number, number, number] = [124, 58, 237];
-      const cinzaEscuro: [number, number, number] = [31, 41, 55];
-      const cinzaMedio: [number, number, number] = [107, 114, 128];
-      const branco: [number, number, number] = [255, 255, 255];
-
-      // ── Cabeçalho com gradiente simulado ──
-      doc.setFillColor(...azul);
-      doc.rect(0, 0, 210, 40, 'F');
-      doc.setFillColor(...roxo);
-      doc.rect(140, 0, 70, 40, 'F');
-
-      doc.setTextColor(...branco);
-      doc.setFontSize(22);
-      doc.setFont('helvetica', 'bold');
-      doc.text(formData.nome.toLocaleUpperCase(), margemEsq, 18);
-
-      doc.setFontSize(15);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`${formData.profissao}  •  Nível: ${formData.nivel.charAt(0).toUpperCase() + formData.nivel.slice(1)}`, margemEsq, 30);
-
-      doc.setFontSize(12);
-      doc.setTextColor(200, 210, 255);
-      doc.text('Gerado com LifeProd IA', margemDir, 36, { align: 'right' });
-
-      y = 50;
-
-      // ── Helper: título de seção ──
-      const secao = (titulo: string, corFundo: [number, number, number]) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFillColor(...corFundo);
-        doc.roundedRect(margemEsq, y, larguraUtil, 8, 2, 2, 'F');
-        doc.setTextColor(...branco);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text(titulo, margemEsq + 4, y + 5.5);
-        y += 12;
-        doc.setTextColor(...cinzaEscuro);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(12);
-      };
-
-      // ── Helper: texto com quebra automática ──
-      const addTexto = (texto: string, corTexto: [number, number, number] = cinzaEscuro) => {
-        if (!texto) return;
-        doc.setTextColor(...corTexto);
-        const linhas = doc.splitTextToSize(texto, larguraUtil);
-        linhas.forEach((linha: string) => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.text(linha, margemEsq, y);
-          y += 6;
-        });
-        y += 3;
-      };
-
-      // ── Helper: campo com label ──
-      const addCampo = (label: string, valor: string) => {
-        if (!valor) return;
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(...cinzaEscuro);
-        doc.text(`${label}:`, margemEsq, y);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(...cinzaMedio);
-        const larguraLabel = doc.getTextWidth(`${label}: `);
-        const linhas = doc.splitTextToSize(valor, larguraUtil - larguraLabel);
-        doc.text(linhas[0], margemEsq + larguraLabel, y);
-        for (let i = 1; i < linhas.length; i++) {
-          y += 5;
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.text(linhas[i], margemEsq, y);
-        }
-        y += 8;
-      };
-
-      // ── INFORMAÇÕES PESSOAIS ──
-      secao('INFORMAÇÕES PESSOAIS', [37, 99, 235]);
-      doc.setFillColor(239, 246, 255);
-      doc.roundedRect(margemEsq, y - 2, larguraUtil, 35, 2, 2, 'F');
-      
-      addCampo('Nome', formData.nome || 'Não informado');
-      if (formData.dataNascimento) addCampo('Data de Nascimento', new Date(formData.dataNascimento).toLocaleDateString('pt-BR'));
-      if (formData.endereco) addCampo('Endereço', formData.endereco);
-      
-      y += 5;
-
-      // ── REDES SOCIAIS ──
-      if (redesSociais.length > 0) {
-        secao('REDES SOCIAIS', [37, 99, 235]);
-        doc.setFillColor(239, 246, 255);
-        const alturaRedes = Math.min(redesSociais.length * 8 + 8, 60);
-        doc.roundedRect(margemEsq, y - 2, larguraUtil, alturaRedes, 2, 2, 'F');
-        
-        redesSociais.forEach(rede => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(...cinzaEscuro);
-          doc.text(`${rede.tipo.charAt(0).toUpperCase() + rede.tipo.slice(1)}:`, margemEsq, y);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(37, 99, 235);
-          doc.textWithLink(rede.url, margemEsq + 35, y, { url: rede.url });
-          y += 7;
-        });
-        y += 5;
-      }
-
-      // ── RESUMO PROFISSIONAL ──
-      secao('RESUMO PROFISSIONAL', [37, 99, 235]);
-      doc.setFillColor(239, 246, 255);
-      const linhasResumo = doc.splitTextToSize(resultado.resumoProfissional, larguraUtil);
-      const alturaResumo = linhasResumo.length * 6 + 8;
-      doc.roundedRect(margemEsq, y - 2, larguraUtil, alturaResumo, 2, 2, 'F');
-      addTexto(resultado.resumoProfissional, [30, 64, 175]);
-      y += 4;
-
-      // ── EXPERIÊNCIAS ──
-      if (experiencias.length > 0) {
-        secao('EXPERIÊNCIAS PROFISSIONAIS', [16, 185, 129]);
-        
-        experiencias.forEach(exp => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.setFillColor(220, 250, 240);
-          doc.roundedRect(margemEsq, y - 2, larguraUtil, 8, 2, 2, 'F');
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(16, 185, 129);
-          doc.text(`${exp.cargo} - ${exp.empresa}`, margemEsq + 4, y + 4);
-          y += 8;
-          
-          doc.setFont('helvetica', 'italic');
-          doc.setTextColor(...cinzaMedio);
-          doc.setFontSize(15);
-          doc.text(`${exp.dataInicio} - ${exp.dataFim || 'atual'}`, margemEsq + 4, y);
-          y += 6;
-          
-          if (exp.descricao) {
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(...cinzaEscuro);
-            doc.setFontSize(12);
-            const descLinhas = doc.splitTextToSize(exp.descricao, larguraUtil - 8);
-            descLinhas.forEach((linha: string) => {
-              if (y > 270) { doc.addPage(); y = 20; }
-              doc.text(`• ${linha}`, margemEsq + 6, y);
-              y += 5;
-            });
-          }
-          y += 6;
-        });
-      } else {
-        secao('EXPERIÊNCIAS PROFISSIONAIS', [16, 185, 129]);
-        addTexto(resultado.descricoesMelhoradas);
-      }
-      y += 4;
-
-      // ── FORMAÇÃO ACADÊMICA ──
-      if (educacoes.length > 0) {
-        secao('FORMAÇÃO ACADÊMICA', [124, 58, 237]);
-        
-        educacoes.forEach(edu => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.setFillColor(240, 235, 255);
-          doc.roundedRect(margemEsq, y - 2, larguraUtil, 8, 2, 2, 'F');
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(124, 58, 237);
-          doc.text(edu.curso, margemEsq + 4, y + 4);
-          y += 8;
-          
-          doc.setFont('helvetica', 'italic');
-          doc.setTextColor(...cinzaMedio);
-          doc.setFontSize(12);
-          doc.text(`${edu.instituicao} | ${edu.dataInicio} - ${edu.dataFim}`, margemEsq + 4, y);
-          y += 10;
-        });
-      }
-
-      // ── IDIOMAS ──
-      if (idiomas.length > 0) {
-        secao('IDIOMAS', [124, 58, 237]);
-        
-        idiomas.forEach(idioma => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(...cinzaEscuro);
-          doc.text(idioma.nome, margemEsq, y);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(...cinzaMedio);
-          const nivelTexto = idioma.nivel.charAt(0).toUpperCase() + idioma.nivel.slice(1);
-          doc.text(`- ${nivelTexto}`, margemEsq + 40, y);
-          y += 7;
-        });
-        y += 4;
-      }
-
-      // ── PROJETOS ──
-      if (projetos.length > 0) {
-        secao('PROJETOS', [249, 115, 22]);
-        
-        projetos.forEach(projeto => {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.setFillColor(255, 240, 220);
-          doc.roundedRect(margemEsq, y - 2, larguraUtil, 8, 2, 2, 'F');
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(249, 115, 22);
-          doc.text(projeto.nome, margemEsq + 4, y + 4);
-          y += 8;
-          
-          if (projeto.descricao) {
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(...cinzaEscuro);
-            const descLinhas = doc.splitTextToSize(projeto.descricao, larguraUtil - 8);
-            descLinhas.forEach((linha: string) => {
-              if (y > 270) { doc.addPage(); y = 20; }
-              doc.text(`• ${linha}`, margemEsq + 6, y);
-              y += 5;
-            });
-          }
-          
-          if (projeto.link) {
-            y += 2;
-            doc.setTextColor(37, 99, 235);
-            doc.setFontSize(12);
-            doc.textWithLink(projeto.link, margemEsq + 6, y, { url: projeto.link });
-            y += 6;
-          }
-          y += 4;
-        });
-      }
-
-      // ── HABILIDADES PRINCIPAIS ──
-      if (resultado.habilidadesPrincipais?.length > 0) {
-        secao('HABILIDADES PRINCIPAIS', [124, 58, 237]);
-        
-        let linhaAtual = '';
-        resultado.habilidadesPrincipais.forEach((hab, idx) => {
-          const texto = idx === 0 ? hab : ` • ${hab}`;
-          if (doc.getTextWidth(linhaAtual + texto) > larguraUtil - 10) {
-            if (y > 270) { doc.addPage(); y = 20; }
-            doc.text(linhaAtual, margemEsq + 4, y);
-            y += 6;
-            linhaAtual = hab;
-          } else {
-            linhaAtual += texto;
-          }
-        });
-        if (linhaAtual) {
-          if (y > 270) { doc.addPage(); y = 20; }
-          doc.text(linhaAtual, margemEsq + 4, y);
-          y += 8;
-        }
-      }
-
-      // ── PALAVRAS-CHAVE ATS ──
-      secao('PALAVRAS-CHAVE ATS', [124, 58, 237]);
-      
-      resultado.palavrasChaveATS.forEach((kw) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFillColor(237, 233, 254);
-        doc.setTextColor(109, 40, 217);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        const largKw = doc.getTextWidth(kw) + 8;
-        doc.roundedRect(margemEsq, y - 4, largKw, 7, 2, 2, 'F');
-        doc.text(kw, margemEsq + 4, y + 0.5);
-        y += 9;
-      });
-
-      // ── Rodapé ──
-      const totalPaginas = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPaginas; i++) {
-        doc.setPage(i);
-        doc.setDrawColor(229, 231, 235);
-        doc.line(margemEsq, 285, margemDir, 285);
-        doc.setFontSize(12);
-        doc.setTextColor(...cinzaMedio);
-        doc.setFont('helvetica', 'normal');
-        doc.text('Gerado por LifeProd — lifeprod.com', margemEsq, 290);
-        doc.text(`Página ${i} de ${totalPaginas}`, margemDir, 290, { align: 'right' });
-      }
-
-      doc.save(`curriculo-${formData.profissao.toLowerCase().replace(/\s+/g, '-') || 'profissional'}.pdf`);
-    }
-
   // ─── Download PDF (simplificado) ─────────────────────────────────────────
   async function handleDownloadPDF() {
   if (!resultado) return;
-    setDownloadLoading(true);
-    try {
-      await baixarPDF(
-        resultado,
-        redesSociais,
-        experiencias,
-        educacoes,
-        idiomas,
-        projetos
-      );
-    } catch (err) {
-      console.error('Erro ao gerar PDF:', err);
-      setError('Erro ao gerar o PDF. Tente novamente.');
-    } finally {
-      setDownloadLoading(false);
-    }
+  setDownloadLoading(true);
+  try {
+    await generatePDF(
+      resultado,
+      {
+        nome: formData.nome,
+        profissao: formData.profissao,
+        nivel: formData.nivel,
+        dataNascimento: formData.dataNascimento,
+        endereco: formData.endereco,
+      },
+      redesSociais,
+      experiencias,
+      educacoes,
+      idiomas,
+      projetos
+    );
+  } catch (err) {
+    console.error('Erro ao gerar PDF:', err);
+    setError('Erro ao gerar o PDF. Tente novamente.');
+  } finally {
+    setDownloadLoading(false);
   }
+}
 
   function copiarTexto(texto: string) {
     navigator.clipboard.writeText(texto);
