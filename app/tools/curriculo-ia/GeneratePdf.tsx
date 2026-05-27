@@ -123,7 +123,7 @@ export async function generatePDF(
       doc.text(`${rede.tipo.charAt(0).toUpperCase() + rede.tipo.slice(1)}:`, margemEsq + 3, y);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(37, 99, 235);
-      doc.textWithLink(rede.url, margemEsq + 22, y, { url: rede.url });
+      doc.textWithLink(rede.url, margemEsq + 20, y, { url: rede.url });
       y += 7.5;
     });
     y += 5;
