@@ -55,77 +55,82 @@ export default function StreakHabitsPage() {
     }
   }, [habitos, loading]);
 
-  // Calcular streak baseado em dias consecutivos desde o início ou último intervalo
-  function calcularStreak(habito: Habito): number {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+  // Utilitário: formatar data para YYYY-MM-DD
+  function formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  // Utilitário: criar data com hora zerada
+  function createDate(dateStr: string): Date {
+    const date = new Date(dateStr);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  // Obter todos os dias entre duas datas (INCLUSIVE)
+  function getDiasEntreDatas(dataInicioStr: string, dataFimStr: string): string[] {
+    const inicio = createDate(dataInicioStr);
+    const fim = createDate(dataFimStr);
     
-    const dataInicioHabito = new Date(habito.dataInicio);
-    dataInicioHabito.setHours(0, 0, 0, 0);
+    if (inicio > fim) return [];
+    
+    const dias: string[] = [];
+    const diffTime = fim.getTime() - inicio.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    for (let i = 0; i <= diffDays; i++) {
+      const data = new Date(inicio);
+      data.setDate(inicio.getDate() + i);
+      dias.push(formatDate(data));
+    }
+    
+    return dias;
+  }
+
+  // Calcular streak atual baseado no histórico
+  function calcularStreak(habito: Habito): number {
+    const hoje = formatDate(new Date());
+    const dataInicio = habito.dataInicio;
     
     // Se a data de início é futura, streak = 0
-    if (hoje < dataInicioHabito) return 0;
+    if (dataInicio > hoje) return 0;
     
     let streak = 0;
-    let dataAtual = new Date(hoje);
-    
-    // Converte o histórico para um formato mais fácil de verificar
-    const historico = habito.historico || {};
+    let dataAtual = createDate(hoje);
+    const dataInicioDate = createDate(dataInicio);
     
     // Verifica dias consecutivos a partir de hoje
-    for (let i = 0; i < 365; i++) {
-      const dataStr = dataAtual.toISOString().split('T')[0];
-      
-      // Se o dia atual está no histórico e foi completado
-      if (historico[dataStr] === true) {
+    while (dataAtual >= dataInicioDate) {
+      const dataStr = formatDate(dataAtual);
+      if (habito.historico[dataStr] === true) {
         streak++;
-        dataAtual.setDate(dataAtual.getDate() - 1); // Vai para o dia anterior
-      } 
-      // Se ainda não chegamos na data de início, para de verificar
-      else if (dataAtual >= dataInicioHabito) {
-        break; // Quebrou a sequência
-      } 
-      else {
+        dataAtual.setDate(dataAtual.getDate() - 1);
+      } else {
         break;
       }
     }
     
-    return streak === 0 ? 0 : streak - 1;
+    return streak;
   }
 
   // Verificar se pode fazer checkin hoje
   function podeFazerCheckin(habito: Habito): boolean {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+    const hoje = formatDate(new Date());
+    const dataInicio = habito.dataInicio;
     
-    const dataInicioHabito = new Date(habito.dataInicio);
-    dataInicioHabito.setHours(0, 0, 0, 0);
-    
-    // Não pode fazer checkin se a data de início é futura
-    if (hoje < dataInicioHabito) return false;
-    
-    const hojeStr = hoje.toISOString().split('T')[0];
-    const historico = habito.historico || {};
-    
-    // Não pode fazer checkin se já fez hoje
-    return !historico[hojeStr];
+    if (dataInicio > hoje) return false;
+    return !habito.historico[hoje];
   }
 
-  // Verificar se o check-in de ontem foi feito (para alerta)
+  // Verificar se o check-in de ontem foi feito
   function verificarCheckinOntem(habito: Habito): boolean {
     const ontem = new Date();
     ontem.setDate(ontem.getDate() - 1);
-    ontem.setHours(0, 0, 0, 0);
+    const ontemStr = formatDate(ontem);
+    const dataInicio = habito.dataInicio;
     
-    const dataInicioHabito = new Date(habito.dataInicio);
-    dataInicioHabito.setHours(0, 0, 0, 0);
-    
-    if (ontem < dataInicioHabito) return true; // Ainda não começou
-    
-    const ontemStr = ontem.toISOString().split('T')[0];
-    const historico = habito.historico || {};
-    
-    return !!historico[ontemStr];
+    if (dataInicio > ontemStr) return true;
+    return !!habito.historico[ontemStr];
   }
 
   // Fazer checkin
@@ -133,32 +138,16 @@ export default function StreakHabitsPage() {
     setHabitos(habitos.map(habito => {
       if (habito.id !== id) return habito;
       
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
-      const hojeStr = hoje.toISOString().split('T')[0];
+      const hoje = formatDate(new Date());
       
-      // Verifica se já fez checkin hoje
-      if (habito.historico[hojeStr]) return habito;
+      if (habito.historico[hoje]) return habito;
       
-      const novoHistorico = { ...habito.historico, [hojeStr]: true };
-      
-      // Calcula a nova streak a partir do histórico
-      let novaStreak = 0;
-      let dataCheck = new Date(hoje);
-      
-      for (let i = 0; i < 365; i++) {
-        const dataCheckStr = dataCheck.toISOString().split('T')[0];
-        if (novoHistorico[dataCheckStr] === true) {
-          novaStreak++;
-          dataCheck.setDate(dataCheck.getDate() - 1);
-        } else {
-          break;
-        }
-      }
+      const novoHistorico = { ...habito.historico, [hoje]: true };
+      const novaStreak = calcularStreak({ ...habito, historico: novoHistorico });
       
       return {
         ...habito,
-        ultimoCheckin: hojeStr,
+        ultimoCheckin: hoje,
         streak: novaStreak,
         maxStreak: Math.max(habito.maxStreak, novaStreak),
         historico: novoHistorico
@@ -166,54 +155,37 @@ export default function StreakHabitsPage() {
     }));
   }
 
-  // Adicionar novo hábito com streak automática baseada na data de início
+  // Adicionar novo hábito
   function adicionarHabito() {
     if (!novoHabito.trim()) return;
     
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+    const hoje = formatDate(new Date());
+    const dataInicioDate = dataInicio;
     
-    const dataInicioDate = new Date(dataInicio);
-    dataInicioDate.setHours(0, 0, 0, 0);
-    
-    // Calcula a streak inicial baseada na data de início
-    let streakInicial = 0;
     const historicoInicial: { [data: string]: boolean } = {};
+    let streakInicial = 0;
     
     if (dataInicioDate <= hoje) {
-      // Calcula quantos dias desde a data de início até hoje
-      const diffTime = hoje.getTime() - dataInicioDate.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir hoje
-      
-      // Marca todos os dias desde a data de início como concluídos
-      for (let i = 0; i < diffDays; i++) {
-        const data = new Date(dataInicioDate);
-        data.setDate(dataInicioDate.getDate() + i);
-        const dataStr = data.toISOString().split('T')[0];
-        
-        // Só marca dias até hoje (não marca dias futuros)
-        if (data <= hoje) {
-          historicoInicial[dataStr] = true;
-        }
-      }
-      
-      // A streak inicial é o número total de dias desde o início
-      streakInicial = diffDays;
+      const dias = getDiasEntreDatas(dataInicioDate, hoje);
+      dias.forEach(dia => {
+        historicoInicial[dia] = true;
+      });
+      streakInicial = dias.length;
     }
     
     const novo: Habito = {
       id: Date.now().toString(),
       nome: novoHabito,
-      dataInicio: dataInicio,
-      ultimoCheckin: hoje.toISOString().split('T')[0],
-      streak: streakInicial-1,
-      maxStreak: streakInicial-1,
+      dataInicio: dataInicioDate,
+      ultimoCheckin: hoje,
+      streak: streakInicial,
+      maxStreak: streakInicial,
       historico: historicoInicial
     };
     
     setHabitos([...habitos, novo]);
     setNovoHabito('');
-    setDataInicio(new Date().toISOString().split('T')[0]);
+    setDataInicio(formatDate(new Date()));
   }
 
   // Remover hábito
@@ -226,29 +198,9 @@ export default function StreakHabitsPage() {
     }
   }
 
-  // Obter todos os dias entre duas datas
-  function getDiasEntreDatas(dataInicio: string, dataFim: string): string[] {
-    const dias: string[] = [];
-    const inicio = new Date(dataInicio);
-    const fim = new Date(dataFim);
-    inicio.setHours(0, 0, 0, 0);
-    fim.setHours(0, 0, 0, 0);
-    
-    const diffTime = fim.getTime() - inicio.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    for (let i = 0; i <= diffDays; i++) {
-      const data = new Date(inicio);
-      data.setDate(inicio.getDate() + i);
-      dias.push(data.toISOString().split('T')[0]);
-    }
-    
-    return dias;
-  }
-
   // Renderizar calendário do hábito selecionado
   function renderizarCalendario(habito: Habito) {
-    const hoje = new Date().toISOString().split('T')[0];
+    const hoje = formatDate(new Date());
     const dias = getDiasEntreDatas(habito.dataInicio, hoje);
     
     // Agrupar por mês
@@ -359,7 +311,7 @@ export default function StreakHabitsPage() {
                 className="mt-1"
               />
               <p className="text-xs text-gray-400 mt-1">
-                A streak começará a contar a partir do primeiro check-in
+                Todos os dias desde esta data serão marcados como concluídos
               </p>
             </div>
             <Button onClick={adicionarHabito} className="w-full bg-orange-600 hover:bg-orange-700">
@@ -388,8 +340,7 @@ export default function StreakHabitsPage() {
                 {habitos.map((habito) => {
                   const streakAtual = calcularStreak(habito);
                   const perdeuOntem = !verificarCheckinOntem(habito);
-                  const dataInicioObj = new Date(habito.dataInicio);
-                  dataInicioObj.setHours(0, 0, 0, 0);
+                  const dataInicioObj = createDate(habito.dataInicio);
                   const hoje = new Date();
                   hoje.setHours(0, 0, 0, 0);
                   const podeComecar = hoje >= dataInicioObj;
@@ -424,7 +375,7 @@ export default function StreakHabitsPage() {
                           {perdeuOntem && podeComecar && streakAtual === 0 && habito.maxStreak > 0 && (
                             <div className="flex items-center gap-1 mt-2">
                               <AlertCircle className="w-3 h-3 text-red-500" />
-                              <span className="text-xs text-red-500">⚠️ Streak perdida! Recomece hoje</span>
+                              <span className="text-xs text-red-500">Streak perdida! Recomece hoje</span>
                             </div>
                           )}
                         </div>

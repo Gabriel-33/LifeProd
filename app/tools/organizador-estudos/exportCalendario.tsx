@@ -119,8 +119,6 @@ export async function exportCalendarioEstudosPdf(
   doc.setFont('helvetica', 'bold');
   doc.text(`Dias disponiveis:`, margemEsq + 5, infoY + 9);
   doc.setFont('helvetica', 'normal');
-  const diasTexto = formData.diasDisponiveis.join(', ') || 'Todos';
-  doc.text(diasTexto, margemEsq + 55, infoY + 9);
 
   doc.setFont('helvetica', 'bold');
   doc.text(`Data da prova:`, margemEsq + 5, infoY + 18);

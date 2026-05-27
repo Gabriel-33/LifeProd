@@ -25,7 +25,6 @@ export interface EstudoResultado {
 export interface FormDataEstudos {
   materias: Materia[];
   horasPorDia: string;
-  diasDisponiveis: string[];
   dataProva: string;
   diasAteProva: number;
 }

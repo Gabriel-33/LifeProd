@@ -380,7 +380,7 @@ Retorne APENAS o JSON solicitado.`;
                 ))}
               </ul>
               <p className="mt-4 text-sm text-gray-600 italic">
-                💡 {planejamento.dicaMotivacional}
+                 {planejamento.dicaMotivacional}
               </p>
             </CardContent>
           </Card>
@@ -482,7 +482,7 @@ Retorne APENAS o JSON solicitado.`;
         <Card className="bg-gradient-to-r from-blue-50 to-purple-50 w-full">
           <CardContent className="p-6">
             <p className="text-base text-gray-700">
-              💡 <span className="font-semibold">Dica:</span> Quanto mais detalhados forem seus objetivos, 
+              <span className="font-semibold">Dica:</span> Quanto mais detalhados forem seus objetivos, 
               mais personalizado será o planejamento gerado pela IA. Inclua metas específicas e prazos!
             </p>
           </CardContent>

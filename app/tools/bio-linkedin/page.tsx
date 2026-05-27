@@ -30,11 +30,11 @@ export default function BioLinkedinPage() {
   const [error, setError] = useState<string | null>(null);
 
   const tons = [
-    { value: 'profissional', label: '👔 Profissional' },
-    { value: 'casual', label: '😊 Casual / Amigável' },
-    { value: 'criativo', label: '🎨 Criativo / Diferente' },
-    { value: 'inspirador', label: '🌟 Inspirador / Motivacional' },
-    { value: 'direto', label: '⚡ Direto / Impactante' },
+    { value: 'profissional', label: 'Profissional' },
+    { value: 'casual', label: 'Casual / Amigável' },
+    { value: 'criativo', label: 'Criativo / Diferente' },
+    { value: 'inspirador', label: 'Inspirador / Motivacional' },
+    { value: 'direto', label: 'Direto / Impactante' },
   ];
 
   async function gerarBio() {
@@ -170,7 +170,7 @@ Retorne APENAS o JSON solicitado.`;
                 rows={6}
               />
               <p className="text-sm text-gray-400 mt-2">
-                💡 Inclua números e resultados sempre que possível
+                Inclua números e resultados sempre que possível
               </p>
             </div>
 
@@ -339,7 +339,7 @@ Retorne APENAS o JSON solicitado.`;
         <Card className="bg-gradient-to-r from-blue-50 to-purple-50 w-full">
           <CardContent className="p-6">
             <p className="text-base text-gray-700">
-              💡 <span className="font-semibold">Dica:</span> Perfis com bios completas recebem até 30% mais visualizações. 
+              <span className="font-semibold">Dica:</span> Perfis com bios completas recebem até 30% mais visualizações. 
               Use números e resultados nas suas conquistas para destacar seu impacto!
             </p>
           </CardContent>

@@ -14,15 +14,6 @@ import { Brain, Loader2, Copy, Sparkles, BookOpen, Calendar, Clock, Target, Plus
 interface PlanoSalvo {
   materias: Materia[];
   horasPorDia: string;
-  diasDisponiveis: {
-    seg: boolean;
-    ter: boolean;
-    qua: boolean;
-    qui: boolean;
-    sex: boolean;
-    sab: boolean;
-    dom: boolean;
-  };
   dataProva: string;
   resultado: EstudoResultado | null;
   dataCriacao: string;
@@ -37,16 +28,6 @@ export default function OrganizadorEstudosPage() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-
-  const [diasDisponiveis, setDiasDisponiveis] = useState({
-    seg: true,
-    ter: true,
-    qua: true,
-    qui: true,
-    sex: true,
-    sab: false,
-    dom: false
-  });
   
   const [loading, setLoading] = useState(false);
   const [resultado, setResultado] = useState<EstudoResultado | null>(null);
@@ -64,7 +45,6 @@ export default function OrganizadorEstudosPage() {
           const ultimoPlano = planos[planos.length - 1];
           setMaterias(ultimoPlano.materias);
           setHorasPorDia(ultimoPlano.horasPorDia);
-          setDiasDisponiveis(ultimoPlano.diasDisponiveis);
           setDataProva(ultimoPlano.dataProva);
           setResultado(ultimoPlano.resultado);
           setMostrarFormulario(false);
@@ -95,7 +75,6 @@ export default function OrganizadorEstudosPage() {
       const planoAtual: PlanoSalvo = {
         materias: materias,
         horasPorDia: horasPorDia,
-        diasDisponiveis: diasDisponiveis,
         dataProva: dataProva,
         resultado: resultado,
         dataCriacao: new Date().toISOString()
@@ -125,15 +104,6 @@ export default function OrganizadorEstudosPage() {
     setMaterias([]);
     setHorasPorDia('');
     setDataProva('');
-    setDiasDisponiveis({
-      seg: true,
-      ter: true,
-      qua: true,
-      qui: true,
-      sex: true,
-      sab: false,
-      dom: false
-    });
     setResultado(null);
     setError(null);
     setMostrarFormulario(true);
@@ -183,47 +153,25 @@ export default function OrganizadorEstudosPage() {
     setResultado(null);
 
     const diasAteProva = Math.min(calcularDiasAteProva(), 14);
-    const diasSelecionados = Object.entries(diasDisponiveis)
-      .filter(([, selected]) => selected)
-      .map(([dia]) => dia);
 
     const materiasTexto = materias.map(m => 
-      `${m.nome} (dificuldade ${m.dificuldade}/5)`
+      `${m.nome}`
     ).join(', ');
 
-    const prompt = `Você é um especialista em organização de estudos.
+    // 🔧 PROMPT OTIMIZADO - mais curto e direto para resposta mais rápida
+    const prompt = `Crie um plano de estudos em JSON para 15 dias.
 
-    Dados do usuário:
-    - Matérias: ${materiasTexto}
-    - Horas por dia: ${horasPorDia}
-    - Dias disponíveis: ${diasSelecionados.join(', ')}
-    - Dias até a prova: ${diasAteProva}
+    Matérias: ${materiasTexto}
+    Horas/dia: ${horasPorDia}
 
-    Gere um JSON com o seguinte formato (responda APENAS com o JSON, sem markdown):
+    Responda APENAS com JSON:
     {
-      "cronograma": [
-        {
-          "dia": 1,
-          "materia": "nome da matéria",
-          "tempoMinutos": 120,
-          "topicos": ["tópico 1", "tópico 2"]
-        }
-      ],
-      "revisoes": ["Dia 5: revisar Matéria X", "Dia 10: revisar Matéria Y"],
-      "metaDiaria": "string (meta diária realista e motivacional)",
-      "dicaEstudo": "string (dica de técnica de estudo)",
-      "materiasPrioridade": [
-        {"nome": "Matéria 1", "horasSemanais": 8}
-      ]
-    }
-
-    Regras:
-    - Distribua o tempo proporcionalmente à dificuldade
-    - Gere um cronograma para ${diasAteProva} dias
-    - Cada dia deve ter entre 2-6 horas de estudo
-    - Os tópicos devem ser específicos e acionáveis
-
-    Retorne APENAS o JSON solicitado.`;
+      "cronograma": [{"dia":1,"materia":"nome","tempoMinutos":120,"topicos":["topico1"]}],
+      "revisoes": ["Dia X: revisar Y"],
+      "metaDiaria": "frase curta",
+      "dicaEstudo": "dica curta",
+      "materiasPrioridade": [{"nome":"Matéria","horasSemanais":8}]
+    }`;
 
     try {
       const response = await fetch('/api/gemini', {
@@ -271,15 +219,6 @@ export default function OrganizadorEstudosPage() {
       setMaterias([]);
       setHorasPorDia('');
       setDataProva('');
-      setDiasDisponiveis({
-        seg: true,
-        ter: true,
-        qua: true,
-        qui: true,
-        sex: true,
-        sab: false,
-        dom: false
-      });
       setResultado(null);
       setError(null);
     }
@@ -299,14 +238,10 @@ export default function OrganizadorEstudosPage() {
     if (!resultado) return;
     setPdfLoading(true);
     try {
-      const diasSelecionados = Object.entries(diasDisponiveis)
-        .filter(([, selected]) => selected)
-        .map(([dia]) => dia);
 
       const pdfFormData = {
         materias: materias,
         horasPorDia: horasPorDia,
-        diasDisponiveis: diasSelecionados,
         dataProva: dataProva,
         diasAteProva: calcularDiasAteProva()
       };
@@ -349,7 +284,7 @@ export default function OrganizadorEstudosPage() {
               
               {/* Matérias */}
               <div>
-                <Label className="text-base font-semibold mb-2 block">Matérias para estudar</Label>
+                <Label className="text-base font-semibold mb-2 block">Matérias para estudar *</Label>
                 <div className="flex gap-2 mb-3">
                   <Input
                     placeholder="Ex: Matemática, Português, História..."
@@ -380,7 +315,7 @@ export default function OrganizadorEstudosPage() {
                         <div className="flex items-center gap-3">
                           <span className="font-medium">{m.nome}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700">
-                            {'⭐'.repeat(m.dificuldade)}
+                            {'L'.repeat(m.dificuldade)}
                           </span>
                         </div>
                         <Button variant="ghost" size="sm" onClick={() => removerMateria(m.id)}>
@@ -394,7 +329,7 @@ export default function OrganizadorEstudosPage() {
 
               {/* Horas por dia */}
               <div>
-                <Label className="text-base font-semibold">Horas disponíveis por dia</Label>
+                <Label className="text-base font-semibold">Horas disponíveis por dia *</Label>
                 <Input
                   type="number"
                   step="0.5"
@@ -404,66 +339,29 @@ export default function OrganizadorEstudosPage() {
                   className="mt-2 text-base py-3 w-full"
                 />
                 <p className="text-sm text-gray-400 mt-1">
-                  ⏰ Quantas horas você consegue estudar por dia?
-                </p>
-              </div>
-
-              {/* Dias disponíveis */}
-              <div>
-                <Label className="text-base font-semibold mb-2 block">Dias que pode estudar</Label>
-                <div className="flex gap-2 flex-wrap">
-                  {diasSemana.map((dia) => (
-                    <Button
-                      key={dia.key}
-                      type="button"
-                      variant={diasDisponiveis[dia.key as keyof typeof diasDisponiveis] ? 'default' : 'outline'}
-                      onClick={() => setDiasDisponiveis({
-                        ...diasDisponiveis,
-                        [dia.key]: !diasDisponiveis[dia.key as keyof typeof diasDisponiveis]
-                      })}
-                      className={diasDisponiveis[dia.key as keyof typeof diasDisponiveis] 
-                        ? 'bg-purple-600 hover:bg-purple-700' 
-                        : ''}
-                    >
-                      {dia.emoji} {dia.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Data da prova */}
-              <div>
-                <Label className="text-base font-semibold">Data da prova (opcional)</Label>
-                <Input
-                  type="date"
-                  value={dataProva}
-                  onChange={(e) => setDataProva(e.target.value)}
-                  className="mt-2 text-base py-3 w-full"
-                />
-                <p className="text-sm text-gray-400 mt-1">
-                  📅 Se não informar, será considerado 30 dias
+                  Quantas horas você consegue estudar por dia?
                 </p>
               </div>
 
               <div className="flex gap-4 pt-4">
                 <Button 
                   onClick={gerarPlano} 
-                  disabled={loading || materias.length == 0}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2 h-11"
+                  disabled={loading || materias.length == 0 || horasPorDia.length == 0}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2 h-9"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="flex w-4 h-4 animate-spin" />
                       Gerando plano...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-5 h-5 mr-2" />
+                      <Sparkles className="w-4 h-4 mr-2" />
                       Gerar Plano com IA
                     </>
                   )}
                 </Button>
-                <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center h-11'>
+                <Button onClick={limparFormulario} variant="outline" className='hover:bg-purple-200 flex-1 justify-center h-9'>
                   Limpar
                 </Button>
               </div>
@@ -477,8 +375,8 @@ export default function OrganizadorEstudosPage() {
           </Card>
         )}
 
-        {/* Resultado - mostra se tem plano salvo OU acabou de gerar */}
-        {resultado && !mostrarFormulario && (
+        {/* Resultado para PLANO RECÉM CRIADO - tem botão Salvar */}
+        {resultado && !mostrarFormulario && !temPlanoSalvo && (
           <>
             <Card className="resultado w-full">
               <CardHeader className="p-8">
@@ -512,7 +410,7 @@ export default function OrganizadorEstudosPage() {
 
                 {/* Dica de estudo */}
                 <div className="bg-yellow-50 p-5 rounded-lg">
-                  <h3 className="font-semibold text-yellow-900 mb-2">💡 Dica de estudo</h3>
+                  <h3 className="font-semibold text-yellow-900 mb-2">Dica de estudo</h3>
                   <p className="text-gray-700">{resultado.dicaEstudo}</p>
                   <Button variant="ghost" size="sm" className="mt-2 h-8" onClick={() => copiarTexto(resultado.dicaEstudo)}>
                     <Copy className="w-3 h-3 mr-1" />
@@ -591,10 +489,10 @@ export default function OrganizadorEstudosPage() {
                   </Button>
                 </div>
 
-                {/* Botões de ação */}
+                {/* Botões de ação - plano NOVO tem botão Salvar */}
                 <div className="flex gap-3 pt-4 border-t">
                   <Button 
-                    className="flex flex-1 bg-purple-600 hover:bg-purple-700 h-10 justify-center"
+                    className="flex flex-1 bg-purple-600 hover:bg-purple-700 h-9 justify-center"
                     onClick={handleExportPDF}
                     disabled={pdfLoading}
                   >
@@ -607,7 +505,7 @@ export default function OrganizadorEstudosPage() {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="flex flex-1 h-10 justify-center"
+                    className="flex flex-1 h-9 justify-center"
                     onClick={salvarPlano}
                     disabled={saveLoading}
                   >
@@ -627,7 +525,153 @@ export default function OrganizadorEstudosPage() {
               <Button 
                 variant="outline" 
                 onClick={criarNovoPlano}
-                className="flex gap-2 h-11"
+                className="flex gap-2 h-9"
+              >
+                <PlusCircle className="flex w-4 h-4" />
+                Novo plano de estudos
+              </Button>
+            </div>
+          </>
+        )}
+
+        {/* Resultado para PLANO JÁ SALVO - NÃO tem botão Salvar */}
+        {resultado && !mostrarFormulario && temPlanoSalvo && (
+          <>
+            <Card className="resultado w-full">
+              <CardHeader className="p-8">
+                <CardTitle className="flex items-center justify-between text-xl flex-wrap gap-2">
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-purple-500" />
+                    Seu plano de estudos (salvo)
+                  </span>
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => copiarTexto(JSON.stringify(resultado, null, 2))} className="flex h-9">
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copiar
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-8 pt-0">
+                
+                {/* Meta diária */}
+                <div className="bg-purple-50 p-5 rounded-lg border-l-4 border-l-purple-500">
+                  <h3 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    Meta diária
+                  </h3>
+                  <p className="text-gray-800">{resultado.metaDiaria}</p>
+                  <Button variant="ghost" size="sm" className="mt-2 h-8" onClick={() => copiarTexto(resultado.metaDiaria)}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar
+                  </Button>
+                </div>
+
+                {/* Dica de estudo */}
+                <div className="bg-yellow-50 p-5 rounded-lg">
+                  <h3 className="font-semibold text-yellow-900 mb-2">Dica de estudo</h3>
+                  <p className="text-gray-700">{resultado.dicaEstudo}</p>
+                  <Button variant="ghost" size="sm" className="mt-2 h-8" onClick={() => copiarTexto(resultado.dicaEstudo)}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar
+                  </Button>
+                </div>
+
+                {/* Prioridade de matérias */}
+                <div className="bg-blue-50 p-5 rounded-lg">
+                  <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    Distribuição de horas por semana
+                  </h3>
+                  <div className="space-y-2">
+                    {resultado.materiasPrioridade.map((m, i) => (
+                      <div key={i} className="flex justify-between items-center p-2 bg-white rounded">
+                        <span className="font-medium text-black">{m.nome}</span>
+                        <span className="text-purple-600 font-semibold">{m.horasSemanais}h/semana</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button variant="ghost" size="sm" className="mt-3 h-8" onClick={() => copiarTexto(resultado.materiasPrioridade.map(m => `${m.nome}: ${m.horasSemanais}h`).join('\n'))}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar distribuição
+                  </Button>
+                </div>
+
+                {/* Cronograma */}
+                <div className="bg-green-50 p-5 rounded-lg">
+                  <h3 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Cronograma de estudos (próximos {resultado.cronograma.length} dias)
+                  </h3>
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {resultado.cronograma.slice(0, 14).map((item, i) => (
+                      <div key={i} className="p-3 bg-white rounded-lg border">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-purple-600">Dia {item.dia}</span>
+                          <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
+                            {item.tempoMinutos} minutos
+                          </span>
+                        </div>
+                        <p className="font-medium mt-1 text-black">{item.materia}</p>
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {item.topicos.slice(0, 3).map((topico, j) => (
+                            <span key={j} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
+                              {topico}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    {resultado.cronograma.length > 14 && (
+                      <p className="text-sm text-gray-500 text-center pt-2">
+                        + {resultado.cronograma.length - 14} dias restantes
+                      </p>
+                    )}
+                  </div>
+                  <Button variant="ghost" size="sm" className="mt-3 h-8" onClick={() => copiarTexto(JSON.stringify(resultado.cronograma, null, 2))}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar cronograma
+                  </Button>
+                </div>
+
+                {/* Revisões */}
+                <div className="bg-red-50 p-5 rounded-lg">
+                  <h3 className="font-semibold text-red-900 mb-2">Dias de revisão sugeridos</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    {resultado.revisoes.map((rev, i) => (
+                      <li key={i}>{rev}</li>
+                    ))}
+                  </ul>
+                  <Button variant="ghost" size="sm" className="mt-2 h-8" onClick={() => copiarTexto(resultado.revisoes.join('\n'))}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar revisões
+                  </Button>
+                </div>
+
+                {/* Botões de ação - plano SALVO NÃO tem botão Salvar */}
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button 
+                    className="flex flex-1 bg-purple-600 hover:bg-purple-700 h-9 justify-center"
+                    onClick={handleExportPDF}
+                    disabled={pdfLoading}
+                  >
+                    {pdfLoading ? (
+                      <Loader2 className="flex w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Calendar className="flex w-4 h-4 mr-2" />
+                    )}
+                    Exportar PDF
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Botão para criar novo plano */}
+            <div className="flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={criarNovoPlano}
+                className="flex gap-2 h-9"
               >
                 <PlusCircle className="flex w-4 h-4" />
                 Novo plano de estudos
@@ -638,21 +682,21 @@ export default function OrganizadorEstudosPage() {
 
         {/* Loading state */}
         {loading && (
-          <Card className="w-full">
-            <CardContent className="p-12 text-center">
-              <Loader2 className="w-8 h-8 animate-spin text-purple-600 mx-auto mb-4" />
-              <p className="text-gray-600">Gerando seu plano de estudos personalizado...</p>
+          <Card className="flex w-full text-center justify-center">
+            <CardContent className="flex h-9">
+              <Loader2 className="w-8 h-7 animate-spin text-purple-600 mx-auto mb-0 justify-center" />
+              <p className="text-gray-600 justify-center">Gerando seu plano de estudos personalizado...</p>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Dica de uso - só mostra se não tem resultado e não está carregando */}
+      {/* Dica de uso */}
       {!resultado && !loading && !mostrarFormulario && !temPlanoSalvo && (
         <Card className="bg-gradient-to-r from-purple-50 to-blue-50 w-full">
           <CardContent className="p-6">
             <p className="text-base text-gray-700">
-              💡 <span className="font-semibold">Dica:</span> Quanto mais específico você for sobre as matérias e dificuldades, 
+              <span className="font-semibold">Dica:</span> Quanto mais específico você for sobre as matérias e dificuldades, 
               mais preciso será o plano de estudos. Seus planos são salvos automaticamente e podem ser recuperados!
             </p>
           </CardContent>

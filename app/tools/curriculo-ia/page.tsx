@@ -190,17 +190,11 @@ export default function CurriculoIAPage() {
       Nível: ${formData.nivel}
       Habilidades informadas: ${formData.habilidades}
 
-      REDES SOCIAIS:
-      ${redesTexto || 'Não informado'}
-
       EXPERIÊNCIAS:
       ${experienciasTexto || 'Não informado'}
 
       EDUCAÇÃO:
       ${educacoesTexto || 'Não informado'}
-
-      IDIOMAS:
-      ${idiomasTexto || 'Não informado'}
 
       PROJETOS:
       ${projetosTexto || 'Não informado'}
@@ -419,7 +413,7 @@ export default function CurriculoIAPage() {
                 />
               </div>
               <div>
-                <Label>Nível profissional</Label>
+                <Label>Nível profissional *</Label>
                 <select
                   value={formData.nivel}
                   onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
@@ -434,7 +428,7 @@ export default function CurriculoIAPage() {
 
             {/* Habilidades */}
             <div>
-              <Label>Habilidades técnicas</Label>
+              <Label>Habilidades técnicas *</Label>
               <Input
                 placeholder="React, TypeScript, Python (separadas por vírgula)"
                 value={formData.habilidades}
@@ -447,7 +441,7 @@ export default function CurriculoIAPage() {
             <div className="border rounded-lg p-4">
               <Label className="font-semibold mb-2 block flex items-center gap-2">
                 <Briefcase className="w-4 h-4" />
-                Experiências Profissionais
+                Experiências Profissionais *
               </Label>
               {experiencias.map((exp) => (
                 <div key={exp.id} className="bg-gray-50 p-3 rounded-lg mb-2">
@@ -618,7 +612,7 @@ export default function CurriculoIAPage() {
       {/* Dica */}
       {!resultado && !loading && (
         <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
-          <CardContent className="p-4"><p className="text-sm text-gray-600">💡 <span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
+          <CardContent className="p-4"><p className="text-sm text-gray-600"><span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
         </Card>
       )}
     </div>
