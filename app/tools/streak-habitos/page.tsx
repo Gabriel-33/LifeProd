@@ -63,7 +63,6 @@ export default function StreakHabitsPage() {
   // Utilitário: criar data com hora zerada
   function createDate(dateStr: string): Date {
     const date = new Date(dateStr);
-    date.setHours(0, 0, 0, 0);
     return date;
   }
 
@@ -78,7 +77,7 @@ export default function StreakHabitsPage() {
     const diffTime = fim.getTime() - inicio.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     
-    for (let i = 0; i <= diffDays; i++) {
+    for (let i = 1; i <= diffDays; i++) {
       const data = new Date(inicio);
       data.setDate(inicio.getDate() + i);
       dias.push(formatDate(data));
@@ -167,23 +166,24 @@ export default function StreakHabitsPage() {
     
     if (dataInicioDate <= hoje) {
       const dias = getDiasEntreDatas(dataInicioDate, hoje);
+
       dias.forEach(dia => {
         historicoInicial[dia] = true;
       });
       streakInicial = dias.length;
     }
     
-    const novo: Habito = {
+    const novaStreakHabito: Habito = {
       id: Date.now().toString(),
       nome: novoHabito,
       dataInicio: dataInicioDate,
       ultimoCheckin: hoje,
-      streak: streakInicial,
+      streak: streakInicial + 1,
       maxStreak: streakInicial,
       historico: historicoInicial
     };
     
-    setHabitos([...habitos, novo]);
+    setHabitos([...habitos, novaStreakHabito]);
     setNovoHabito('');
     setDataInicio(formatDate(new Date()));
   }
@@ -202,9 +202,9 @@ export default function StreakHabitsPage() {
   function renderizarCalendario(habito: Habito) {
     const hoje = formatDate(new Date());
     const dias = getDiasEntreDatas(habito.dataInicio, hoje);
-    
     // Agrupar por mês
     const meses: { [key: string]: { dias: string[]; nome: string } } = {};
+    
     dias.forEach(dia => {
       const data = new Date(dia);
       const mesKey = `${data.getFullYear()}-${data.getMonth()}`;
@@ -235,7 +235,7 @@ export default function StreakHabitsPage() {
                     espacos.push(<div key={`empty-${i}`} className="aspect-square" />);
                   }
                 }
-                const isCompletado = habito.historico[dia];
+
                 const isHoje = dia === hoje;
                 
                 return (
@@ -243,8 +243,8 @@ export default function StreakHabitsPage() {
                     {espacos}
                     <div
                       className={`aspect-square rounded-lg flex items-center justify-center text-sm transition-all
-                        ${isCompletado ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600'}
-                        ${isHoje && !isCompletado ? 'border-2 border-purple-500' : ''}
+                        bg-green-500 text-white
+                        ${isHoje ? 'border-2 border-purple-500' : ''}
                       `}
                     >
                       {data.getDate()}
