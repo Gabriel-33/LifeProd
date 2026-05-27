@@ -303,9 +303,16 @@ export default function OrganizadorEstudosPage() {
                     <option value={3}>Difícil</option>
                     <option value={4}>Muito difícil</option>
                   </select>
-                  <Button onClick={adicionarMateria} variant="outline" size="sm">
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                  
+                  {materias.length < 5  ? (
+                    <Button onClick={adicionarMateria} variant="outline" size="sm">
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  ):(
+                    <div className='flex flex-1 text-red-900'>
+                      Na versão free, só 5 matérias podem ser adicionadas!
+                    </div>
+                  )};
                 </div>
                 
                 {materias.length > 0 && (

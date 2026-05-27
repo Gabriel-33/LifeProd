@@ -463,9 +463,16 @@ export default function CurriculoIAPage() {
                 <Input placeholder="Mês/Ano início" value={novaExperiencia.dataInicio} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataInicio: e.target.value })} />
                 <Input placeholder="Mês/Ano fim (ou 'atual')" value={novaExperiencia.dataFim} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataFim: e.target.value })} />
                 <Textarea placeholder="Descrição das atividades" className="md:col-span-2" value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
-                <Button onClick={adicionarExperiencia} variant="outline" className="flex w-15">
-                  <Plus className="w-6 h-6" />
-                </Button>
+
+                {experiencias.length < 3  ? (
+                  <Button onClick={adicionarExperiencia} variant="outline" className="flex w-15">
+                    <Plus className="w-6 h-6" />
+                  </Button>
+                ):(
+                  <div className='flex flex-1 text-red-900'>
+                    Na versão free, só 3 experiências podem ser adicionadas!
+                  </div>
+                )}
               </div>
             </div>
 
@@ -494,9 +501,16 @@ export default function CurriculoIAPage() {
                 <Input placeholder="Curso" value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
                 <Input placeholder="Mês/Ano início" value={novaEducacao.dataInicio} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataInicio: e.target.value })} />
                 <Input placeholder="Mês/Ano fim" value={novaEducacao.dataFim} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataFim: e.target.value })} />
-                <Button onClick={adicionarEducacao} variant="outline" className="flex w-15">
-                  <Plus className="w-6 h-6" />
-                </Button>
+
+                {educacoes.length < 3  ? (
+                  <Button onClick={adicionarEducacao} variant="outline" className="flex w-15">
+                    <Plus className="w-6 h-6" />
+                  </Button>
+                ):(
+                  <div className='flex flex-1 text-red-900'>
+                    Na versão free, só 3 formações podem ser adicionadas!
+                  </div>
+                )}
               </div>
             </div>
 
@@ -522,9 +536,16 @@ export default function CurriculoIAPage() {
                   <option value="avancado">Avançado</option>
                   <option value="fluente">Fluente</option>
                 </select>
-                <Button onClick={adicionarIdioma} variant="outline" size="sm">
-                  <Plus className="w-4 h-4" />
-                </Button>
+
+                {idiomas.length < 3  ? (
+                  <Button onClick={adicionarIdioma} variant="outline" className="flex w-15">
+                    <Plus className="w-6 h-6" />
+                  </Button>
+                ):(
+                  <div className='flex flex-1 text-red-900'>
+                    Na versão free, só 3 idiomas podem ser adicionados!
+                  </div>
+                )}
               </div>
             </div>
 
@@ -552,15 +573,23 @@ export default function CurriculoIAPage() {
                 <Input placeholder="Nome do projeto" value={novoProjeto.nome} onChange={(e) => setNovoProjeto({ ...novoProjeto, nome: e.target.value })} />
                 <Textarea placeholder="Descrição do projeto" value={novoProjeto.descricao} onChange={(e) => setNovoProjeto({ ...novoProjeto, descricao: e.target.value })} rows={2} />
                 <Input placeholder="Link do projeto (GitHub, deploy...)" value={novoProjeto.link} onChange={(e) => setNovoProjeto({ ...novoProjeto, link: e.target.value })} />
-                <Button onClick={adicionarProjeto} variant="outline" className="flex w-15">
-                  <Plus className="w-6 h-6" />
-                </Button>
+
+                {projetos.length < 3  ? (
+                  <Button onClick={adicionarProjeto} variant="outline" className="flex w-15">
+                    <Plus className="w-6 h-6" />
+                  </Button>
+                ):(
+                  <div className='flex flex-1 text-red-900'>
+                    Na versão free, só 3 projetos podem ser adicionados!
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Botões de ação */}
             <div className="flex gap-4 pt-4">
-              <Button onClick={gerarCurriculo} disabled={loading} className="flex flex-1 justify-center   bg-purple-600 hover:bg-purple-700">
+              <Button onClick={gerarCurriculo} disabled={loading || formData.nome.length === 0 || formData.email.length === 0 
+                || formData.profissao.length === 0 || formData.habilidades.length === 0} className="flex flex-1 justify-center   bg-purple-600 hover:bg-purple-700">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="flex w-4 h-4 mr-2" />}
                 {loading ? 'Gerando...' : 'Gerar Currículo com IA'}
               </Button>
