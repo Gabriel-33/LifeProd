@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import { 
   Home, 
   FileText, 
-  Calculator, 
   Calendar, 
   CalendarClock,
   CheckSquare,
@@ -51,8 +50,10 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
               <Menu className="w-5 h-5" />
             </Button>
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-7 h-7 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg"></div>
-              <span className="font-bold text-lg">LifeProd</span>
+              <div className="w-10 h-10 bg-gradient-to-r rounded-lg">
+                <img src='../../favicon.ico'></img>
+              </div>
+              <span className="font-bold text-lg text-gray-400">LifeProd</span>
             </Link>
           </div>
           <div className="flex items-center space-x-3">

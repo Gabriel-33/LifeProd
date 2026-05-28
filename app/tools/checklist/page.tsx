@@ -161,7 +161,7 @@ export default function ChecklistPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-1">
         
         {/* Formulário de adicionar tarefa */}
         <Card className="lg:col-span-1">
@@ -171,7 +171,7 @@ export default function ChecklistPage() {
               Nova tarefa
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 p-6 pt-0">
+          <CardContent className="space-y-4 p-5 pt-0">
             <div>
               <Label>Descrição da tarefa</Label>
               <Input
@@ -216,7 +216,7 @@ export default function ChecklistPage() {
         </Card>
 
         {/* Lista de tarefas */}
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-2">
           <CardHeader className="p-3">
             <div className="flex-col flex-center justify-center sm:flex-row sm:items-center sm:justify-center gap-4">
               <CardTitle className="flex items-center gap-2 text-xl">

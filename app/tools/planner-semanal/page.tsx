@@ -7,6 +7,9 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
+import {generatePdfPlanner} from "./ExportPlannerPdf"
+import {Tarefa, PlanejamentoSemanal} from './InterfacePlanner';
+
 import { 
   Calendar, 
   Loader2, 
@@ -16,32 +19,11 @@ import {
   Check,
   Clock,
   Target,
-  Save,
   Download,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
 
-interface Tarefa {
-  id: string;
-  titulo: string;
-  horario: string;
-  concluida: boolean;
-  prioridade: 'alta' | 'media' | 'baixa';
-}
-
-interface DiaPlanner {
-  nome: string;
-  data: string;
-  tarefas: Tarefa[];
-}
-
-interface PlanejamentoSemanal {
-  semana: string;
-  dias: DiaPlanner[];
-  metasSemanais: string[];
-  dicaMotivacional: string;
-}
 
 export default function PlannerSemanalPage() {
   const [loading, setLoading] = useState(false);
@@ -100,36 +82,36 @@ export default function PlannerSemanalPage() {
 
     const prompt = `Você é um especialista em produtividade e organização pessoal.
 
-Crie um planejamento semanal personalizado com os seguintes dados:
+    Crie um planejamento semanal personalizado com os seguintes dados:
 
-OBJETIVOS DA SEMANA: ${objetivos || 'Produtividade geral'}
-HORAS DISPONÍVEIS POR DIA: ${horasDia || '8'} horas
-COMPROMISSOS FIXOS: ${compromissosFixos || 'Nenhum'}
+    OBJETIVOS DA SEMANA: ${objetivos || 'Produtividade geral'}
+    HORAS DISPONÍVEIS POR DIA: ${horasDia || '8'} horas
+    COMPROMISSOS FIXOS: ${compromissosFixos || 'Nenhum'}
 
-Responda APENAS com um JSON válido, sem markdown.
+    Responda APENAS com um JSON válido, sem markdown.
 
-O JSON deve ter EXATAMENTE esta estrutura:
-{
-  "metasSemanais": ["Meta 1", "Meta 2", "Meta 3"],
-  "dicaMotivacional": "Uma frase motivacional para a semana",
-  "tarefasSugeridas": [
+    O JSON deve ter EXATAMENTE esta estrutura:
     {
-      "dia": "Segunda",
-      "tarefas": [
-        {"titulo": "Tarefa exemplo", "horario": "09:00", "prioridade": "alta"}
+      "metasSemanais": ["Meta 1", "Meta 2", "Meta 3"],
+      "dicaMotivacional": "Uma frase motivacional para a semana",
+      "tarefasSugeridas": [
+        {
+          "dia": "Segunda",
+          "tarefas": [
+            {"titulo": "Tarefa exemplo", "horario": "09:00", "prioridade": "alta"}
+          ]
+        }
       ]
     }
-  ]
-}
 
-Regras:
-- Distribua as tarefas ao longo da semana de forma equilibrada
-- Cada dia deve ter entre 3-8 tarefas
-- Horários sugeridos: 09:00, 10:30, 14:00, 15:30, etc.
-- Prioridades: alta, media, baixa
-- As tarefas devem estar alinhadas com os objetivos informados
+    Regras:
+    - Distribua as tarefas ao longo da semana de forma equilibrada
+    - Cada dia deve ter entre 3-8 tarefas
+    - Horários sugeridos: 09:00, 10:30, 14:00, 15:30, etc.
+    - Prioridades: alta, media, baixa
+    - As tarefas devem estar alinhadas com os objetivos informados
 
-Retorne APENAS o JSON solicitado.`;
+    Retorne APENAS o JSON solicitado.`;
 
     try {
       const response = await fetch('/api/gemini', {
@@ -260,6 +242,10 @@ Retorne APENAS o JSON solicitado.`;
   }
 
   const diasSemana = planejamento?.dias || [];
+
+  function exportarSemanaPdf(){
+    generatePdfPlanner(planejamento);
+  }
 
   return (
     <div className="space-y-8 w-full">
@@ -473,8 +459,8 @@ Retorne APENAS o JSON solicitado.`;
               <Sparkles className="w-4 h-4 mr-2" />
               Novo planejamento
             </Button>
-            <Button className="bg-green-600 hover:bg-green-700">
-              <Download className="w-4 h-4 mr-2" />
+            <Button className="bg-green-600 hover:bg-green-700" onClick={() => exportarSemanaPdf()}>
+              <Download className="w-4 h-4 mr-2"/>
               Exportar semana
             </Button>
           </div>

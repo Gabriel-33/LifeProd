@@ -13,7 +13,6 @@ import {
   Target, 
   Check, 
   Trash2,
-  TrendingUp,
   AlertCircle
 } from 'lucide-react';
 import React from 'react';
@@ -31,7 +30,8 @@ interface Habito {
 export default function StreakHabitsPage() {
   const [habitos, setHabitos] = useState<Habito[]>([]);
   const [novoHabito, setNovoHabito] = useState('');
-  const [dataInicio, setDataInicio] = useState(new Date().toISOString().split('T')[0]);
+  const [dataInicio, setDataInicio] = useState('');
+  const [streakValorAux, setStreakValorAux] =  useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [habitoSelecionado, setHabitoSelecionado] = useState<Habito | null>(null);
 
@@ -41,7 +41,9 @@ export default function StreakHabitsPage() {
     if (salvos) {
       try {
         const parsed = JSON.parse(salvos);
+        
         setHabitos(parsed);
+
       } catch (e) {
         console.error('Erro ao carregar hábitos:', e);
       }
@@ -53,6 +55,19 @@ export default function StreakHabitsPage() {
   useEffect(() => {
     if (!loading) {
       localStorage.setItem('lifeprod_streak_habits', JSON.stringify(habitos));
+    }
+    if(habitos.length > 0){
+      
+      for(let index = 0; index < habitos.length; index++) {
+        const streakValorAux = calcularStreak(habitos[index]);
+        
+        // Atualiza o array de streaks
+        setStreakValorAux(prevStreaks => {
+          const novas = [...prevStreaks];
+          novas[index] = streakValorAux;
+          return novas;
+        });
+      }
     }
   }, [habitos, loading]);
 
@@ -318,9 +333,15 @@ export default function StreakHabitsPage() {
                 Todos os dias desde esta data serão marcados como concluídos
               </p>
             </div>
-            <Button onClick={adicionarHabito} className="w-full bg-orange-600 hover:bg-orange-700">
-              Criar hábito
-            </Button>
+            {habitos.length < 3 ? (
+              <Button onClick={adicionarHabito} className="w-full bg-orange-600 hover:bg-orange-700">
+                Criar hábito
+              </Button>
+            ):(
+              <p className="text-xs text-red-400 mt-1">
+                Apenas 3 hábitos por versão!
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -341,7 +362,7 @@ export default function StreakHabitsPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {habitos.map((habito) => {
+                {habitos.map((habito, key) => {
                   const streakAtual = calcularStreak(habito);
                   const perdeuOntem = !verificarCheckinOntem(habito);
                   const dataInicioObj = createDate(habito.dataInicio);
@@ -365,12 +386,8 @@ export default function StreakHabitsPage() {
                           <div className="flex items-center gap-4 mt-2">
                             <div className="flex items-center gap-1">
                               <Flame className={`w-4 h-4 ${streakAtual > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
-                              <span className="text-sm font-bold text-orange-600">{streakAtual}</span>
+                              <span className="text-sm font-bold text-orange-600">{streakValorAux[key]}</span>
                               <span className="text-xs text-gray-500">dias</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <TrendingUp className="w-4 h-4 text-gray-400" />
-                              <span className="text-sm font-medium text-gray-600">Max: {habito.maxStreak}</span>
                             </div>
                             <div className="text-xs text-gray-400">
                               Início: {new Date(habito.dataInicio).toLocaleDateString('pt-BR')}

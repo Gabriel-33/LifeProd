@@ -42,6 +42,7 @@ export default function ContadorCaracteresPage() {
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
               rows={10}
+              maxLength={500}
             />
             <div className="flex gap-3">
               <Button onClick={limpar} variant="outline" size="sm">

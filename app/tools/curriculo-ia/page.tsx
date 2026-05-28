@@ -29,11 +29,6 @@ import {
   FolderGit2
 } from 'lucide-react';
 
-function formatarMesAno(dataISO: string): string {
-  if (!dataISO) return '';
-  const [ano, mes] = dataISO.split('-');
-  return `${mes}/${ano}`;
-}
 
 // ─── Componente Principal ──────────────────────────────────────────────────
 export default function CurriculoIAPage() {
