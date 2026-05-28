@@ -8,7 +8,9 @@ import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
 import {generatePDF} from './GeneratePdf';
-import {CurriculoResultado, FormDataPDF, RedeSocial, Experiencia, Educacao, Idioma, Projeto} from './CurriculoInterfaces';
+import {CurriculoResultado, RedeSocial, Experiencia, Educacao, Idioma, Projeto} from './CurriculoInterfaces';
+import { MonthPicker } from '../../components/MonthPicker';
+import { FullDatePicker } from '../../components/FullDatePicker';
 
 import { 
   FileText, 
@@ -26,6 +28,12 @@ import {
   Globe,
   FolderGit2
 } from 'lucide-react';
+
+function formatarMesAno(dataISO: string): string {
+  if (!dataISO) return '';
+  const [ano, mes] = dataISO.split('-');
+  return `${mes}/${ano}`;
+}
 
 // ─── Componente Principal ──────────────────────────────────────────────────
 export default function CurriculoIAPage() {
@@ -324,7 +332,7 @@ export default function CurriculoIAPage() {
           </CardHeader>
           <CardContent className="space-y-6 p-6 pt-0">
             {/* Informações Pessoais */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2">
               <div>
                 <Label>Nome completo *</Label>
                 <Input
@@ -332,15 +340,19 @@ export default function CurriculoIAPage() {
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                   className="mt-1"
+                  maxLength={60}
                 />
               </div>
               <div>
-                <Label>Data de nascimento</Label>
-                <Input
-                  type="date"
+                <Label className='ml-13'>Data de nascimento</Label>
+                
+                <FullDatePicker
                   value={formData.dataNascimento}
-                  onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
-                  className="mt-1"
+                  onChange={(value) => setFormData({
+                    ...formData,
+                    dataNascimento: value
+                  })}
+                  placeholder="Dia/Mês/Ano início"
                 />
               </div>
             </div>
@@ -352,6 +364,7 @@ export default function CurriculoIAPage() {
                 value={formData.endereco}
                 onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
                 className="mt-1"
+                maxLength={90}
               />
             </div>
 
@@ -362,6 +375,7 @@ export default function CurriculoIAPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="mt-1"
+                maxLength={50}
               />
             </div>
             
@@ -394,6 +408,7 @@ export default function CurriculoIAPage() {
                   value={novaRedeUrl}
                   onChange={(e) => setNovaRedeUrl(e.target.value)}
                   className="flex-1"
+                  maxLength={60}
                 />
                 <Button onClick={adicionarRedeSocial} variant="outline" size="sm">
                   <Plus className="w-4 h-4" />
@@ -410,6 +425,7 @@ export default function CurriculoIAPage() {
                   value={formData.profissao}
                   onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
                   className="mt-1"
+                  maxLength={50}
                 />
               </div>
               <div>
@@ -434,6 +450,7 @@ export default function CurriculoIAPage() {
                 value={formData.habilidades}
                 onChange={(e) => setFormData({ ...formData, habilidades: e.target.value })}
                 className="mt-1"
+                maxLength={120}
               />
             </div>
 
@@ -457,12 +474,27 @@ export default function CurriculoIAPage() {
                   </div>
                 </div>
               ))}
-              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                <Input placeholder="Empresa" value={novaExperiencia.empresa} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, empresa: e.target.value })} />
-                <Input placeholder="Cargo" value={novaExperiencia.cargo} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, cargo: e.target.value })} />
-                <Input placeholder="Mês/Ano início" value={novaExperiencia.dataInicio} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataInicio: e.target.value })} />
-                <Input placeholder="Mês/Ano fim (ou 'atual')" value={novaExperiencia.dataFim} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, dataFim: e.target.value })} />
-                <Textarea placeholder="Descrição das atividades" className="md:col-span-2" value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
+              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2" lang="pt-BR">
+                <Input placeholder="Empresa" maxLength={45} value={novaExperiencia.empresa} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, empresa: e.target.value })} />
+                <Input placeholder="Cargo" maxLength={45} value={novaExperiencia.cargo} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, cargo: e.target.value })} />
+                <MonthPicker
+                  value={novaExperiencia.dataInicio}
+                  onChange={(value) => setNovaExperiencia({
+                    ...novaExperiencia,
+                    dataInicio: value
+                  })}
+                  placeholder="Mês/Ano início"
+                />
+
+                <MonthPicker
+                  value={novaExperiencia.dataInicio}
+                  onChange={(value) => setNovaExperiencia({
+                    ...novaExperiencia,
+                    dataFim: value
+                  })}
+                  placeholder="Mês/Ano final"
+                />
+                <Textarea placeholder="Descrição das atividades" maxLength={150} className="md:col-span-2" value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
 
                 {experiencias.length < 3  ? (
                   <Button onClick={adicionarExperiencia} variant="outline" className="flex w-15">
@@ -497,11 +529,25 @@ export default function CurriculoIAPage() {
                 </div>
               ))}
               <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                <Input placeholder="Instituição" value={novaEducacao.instituicao} onChange={(e) => setNovaEducacao({ ...novaEducacao, instituicao: e.target.value })} />
-                <Input placeholder="Curso" value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
-                <Input placeholder="Mês/Ano início" value={novaEducacao.dataInicio} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataInicio: e.target.value })} />
-                <Input placeholder="Mês/Ano fim" value={novaEducacao.dataFim} onChange={(e) => setNovaEducacao({ ...novaEducacao, dataFim: e.target.value })} />
-
+                <Input placeholder="Instituição" maxLength={45} value={novaEducacao.instituicao} onChange={(e) => setNovaEducacao({ ...novaEducacao, instituicao: e.target.value })} />
+                <Input placeholder="Curso" maxLength={45} value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
+                <MonthPicker
+                  value={novaExperiencia.dataInicio}
+                  onChange={(value) => setNovaEducacao({
+                    ...novaEducacao,
+                    dataInicio: value
+                  })}
+                  placeholder="Mês/Ano início"
+                />
+                
+                <MonthPicker
+                  value={novaExperiencia.dataInicio}
+                  onChange={(value) => setNovaEducacao({
+                    ...novaEducacao,
+                    dataFim: value
+                  })}
+                  placeholder="Mês/Ano início"
+                />
                 {educacoes.length < 3  ? (
                   <Button onClick={adicionarEducacao} variant="outline" className="flex w-15">
                     <Plus className="w-6 h-6" />

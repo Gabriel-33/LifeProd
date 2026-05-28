@@ -157,6 +157,7 @@ Retorne APENAS o JSON solicitado.`;
                 value={formData.profissao}
                 onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
                 className="mt-2 text-base py-3 w-full"
+                maxLength={50}
               />
             </div>
 
@@ -168,6 +169,7 @@ Retorne APENAS o JSON solicitado.`;
                 onChange={(e) => setFormData({ ...formData, conquistas: e.target.value })}
                 className="mt-2 text-base w-full"
                 rows={6}
+                maxLength={150}
               />
               <p className="text-sm text-gray-400 mt-2">
                 Inclua números e resultados sempre que possível

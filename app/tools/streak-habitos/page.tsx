@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { FullDatePickerBlock } from '../../components/FullDatePicker';
 import { 
   Calendar as CalendarIcon, 
   Flame, 
@@ -295,6 +296,7 @@ export default function StreakHabitsPage() {
             <div>
               <Label>Nome do hábito</Label>
               <Input
+                maxLength={15}
                 placeholder="Ex: Beber água, Ler, Meditar, Estudar..."
                 value={novoHabito}
                 onChange={(e) => setNovoHabito(e.target.value)}
@@ -304,11 +306,13 @@ export default function StreakHabitsPage() {
             </div>
             <div>
               <Label>Data de início</Label>
-              <Input
-                type="date"
+
+              <FullDatePickerBlock
                 value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-                className="mt-1"
+                onChange={(value) => setDataInicio(
+                  value
+                )}
+                placeholder="Dia/Mês/Ano"
               />
               <p className="text-xs text-gray-400 mt-1">
                 Todos os dias desde esta data serão marcados como concluídos

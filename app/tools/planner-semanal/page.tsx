@@ -286,24 +286,27 @@ Retorne APENAS o JSON solicitado.`;
           </CardHeader>
           <CardContent className="space-y-6 p-8 pt-0">
             <div>
-              <Label className="text-base font-semibold">Objetivos da semana</Label>
+              <Label className="text-base font-semibold">Objetivos da semana *</Label>
               <Textarea
                 placeholder="Ex: Estudar React, Finalizar projeto, Fazer exercícios..."
                 value={objetivos}
                 onChange={(e) => setObjetivos(e.target.value)}
                 className="mt-2"
                 rows={3}
+                maxLength={100}
               />
             </div>
 
             <div>
-              <Label className="text-base font-semibold">Horas disponíveis por dia</Label>
+              <Label className="text-base font-semibold">Horas disponíveis por dia *</Label>
               <Input
                 type="number"
                 placeholder="Ex: 8"
                 value={horasDia}
                 onChange={(e) => setHorasDia(e.target.value)}
                 className="mt-2"
+                min={1}
+                max={6}
               />
             </div>
 
@@ -315,6 +318,7 @@ Retorne APENAS o JSON solicitado.`;
                 onChange={(e) => setCompromissosFixos(e.target.value)}
                 className="mt-2"
                 rows={2}
+                maxLength={100}
               />
             </div>
             <div className="flex gap-3 pt-2">

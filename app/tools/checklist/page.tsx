@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { FullDatePickerBlock } from '../../components/FullDatePicker';
 import { 
   CheckSquare, 
   Plus, 
@@ -174,6 +175,7 @@ export default function ChecklistPage() {
             <div>
               <Label>Descrição da tarefa</Label>
               <Input
+                maxLength={45}
                 placeholder="Ex: Estudar React, Fazer exercícios, Comprar pão..."
                 value={novaTarefa}
                 onChange={(e) => setNovaTarefa(e.target.value)}
@@ -197,12 +199,14 @@ export default function ChecklistPage() {
 
             <div>
               <Label>Data limite (opcional)</Label>
-              <Input
-                type="date"
-                value={dataLimite}
-                onChange={(e) => setDataLimite(e.target.value)}
-                className="mt-1"
-              />
+
+              <FullDatePickerBlock
+                  value={dataLimite}
+                  onChange={(value) => setDataLimite(
+                    value
+                  )}
+                  placeholder="Dia/Mês/Ano"
+                />
             </div>
 
             <Button onClick={adicionarTarefa} disabled={loading || novaTarefa.length === 0} className="w-full bg-green-600 hover:bg-green-700">
