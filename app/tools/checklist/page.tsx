@@ -14,12 +14,9 @@ import {
   Check, 
   Calendar,
   Flag,
-  Star,
   Loader2,
-  Save,
   RefreshCw
 } from 'lucide-react';
-import { describe } from 'node:test';
 
 interface Tarefa {
   id: string;
@@ -49,6 +46,7 @@ export default function ChecklistPage() {
         console.error('Erro ao carregar tarefas:', e);
       }
     }
+
     setLoading(false);
   }, []);
 

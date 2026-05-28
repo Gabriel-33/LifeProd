@@ -7,8 +7,8 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
-import {generatePDF} from './GeneratePdf';
-import {CurriculoResultado, RedeSocial, Experiencia, Educacao, Idioma, Projeto} from './CurriculoInterfaces';
+import { generatePDF } from './GeneratePdf';
+import { CurriculoResultado, RedeSocial, Experiencia, Educacao, Idioma, Projeto } from './CurriculoInterfaces';
 import { MonthPicker } from '../../components/MonthPicker';
 import { FullDatePicker } from '../../components/FullDatePicker';
 
@@ -28,7 +28,6 @@ import {
   Globe,
   FolderGit2
 } from 'lucide-react';
-
 
 // ─── Componente Principal ──────────────────────────────────────────────────
 export default function CurriculoIAPage() {
@@ -65,7 +64,7 @@ export default function CurriculoIAPage() {
     nome: '',
     dataNascimento: '',
     endereco: '',
-    email:'',
+    email: '',
     profissao: '',
     habilidades: '',
     nivel: 'pleno',
@@ -249,34 +248,34 @@ export default function CurriculoIAPage() {
     }
   }
 
-  // ─── Download PDF (simplificado) ─────────────────────────────────────────
+  // ─── Download PDF ─────────────────────────────────────────────────────────
   async function handleDownloadPDF() {
-  if (!resultado) return;
-  setDownloadLoading(true);
-  try {
-    await generatePDF(
-      resultado,
-      {
-        nome: formData.nome,
-        profissao: formData.profissao,
-        email: formData.email,
-        nivel: formData.nivel,
-        dataNascimento: formData.dataNascimento,
-        endereco: formData.endereco,
-      },
-      redesSociais,
-      experiencias,
-      educacoes,
-      idiomas,
-      projetos
-    );
-  } catch (err) {
-    console.error('Erro ao gerar PDF:', err);
-    setError('Erro ao gerar o PDF. Tente novamente.');
-  } finally {
-    setDownloadLoading(false);
+    if (!resultado) return;
+    setDownloadLoading(true);
+    try {
+      await generatePDF(
+        resultado,
+        {
+          nome: formData.nome,
+          profissao: formData.profissao,
+          email: formData.email,
+          nivel: formData.nivel,
+          dataNascimento: formData.dataNascimento,
+          endereco: formData.endereco,
+        },
+        redesSociais,
+        experiencias,
+        educacoes,
+        idiomas,
+        projetos
+      );
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+      setError('Erro ao gerar o PDF. Tente novamente.');
+    } finally {
+      setDownloadLoading(false);
+    }
   }
-}
 
   function copiarTexto(texto: string) {
     navigator.clipboard.writeText(texto);
@@ -288,7 +287,7 @@ export default function CurriculoIAPage() {
       nome: '',
       dataNascimento: '',
       endereco: '',
-      email:'',
+      email: '',
       profissao: '',
       habilidades: '',
       nivel: 'pleno',
@@ -327,68 +326,164 @@ export default function CurriculoIAPage() {
           </CardHeader>
           <CardContent className="space-y-6 p-6 pt-0">
             {/* Informações Pessoais */}
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>Nome completo *</Label>
                 <Input
                   placeholder="Ex: Gustavo Costa Silva"
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  className="mt-1"
+                  className="mt-1 w-full"
                   maxLength={60}
                 />
               </div>
+
               <div>
-                <Label className='ml-13'>Data de nascimento</Label>
-                
+                <Label>Email pessoal completo *</Label>
+                <Input
+                  placeholder="Ex: JoaoCrispim@gmail.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="mt-1"
+                  maxLength={50}
+                />
+              </div>
+            </div>
+
+            {/* Profissão e Nível */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label>Profissão *</Label>
+                <Input
+                  placeholder="Ex: Desenvolvedor Front-end"
+                  value={formData.profissao}
+                  onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
+                  className="mt-1"
+                  maxLength={50}
+                />
+              </div>
+              <div>
+                <Label>Nível profissional *</Label>
+                <select
+                  value={formData.nivel}
+                  onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
+                  className="w-full mt-1 px-3 py-2 border rounded-lg text-gray-700"
+                >
+                  {niveis.map((n) => (
+                    <option key={n.value} value={n.value}>{n.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+             {/* Habilidades */}
+            <div>
+              <Label>Habilidades técnicas *</Label>
+              <Input
+                placeholder="React, TypeScript, Python (separadas por vírgula)"
+                value={formData.habilidades}
+                onChange={(e) => setFormData({ ...formData, habilidades: e.target.value })}
+                className="mt-1"
+                maxLength={120}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label>Endereço</Label>
+                <Input
+                  placeholder="Cidade - Estado"
+                  value={formData.endereco}
+                  onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
+                  className="mt-1"
+                  maxLength={90}
+                />
+              </div>
+
+              <div>
+                <Label>Data de nascimento</Label>
                 <FullDatePicker
                   value={formData.dataNascimento}
                   onChange={(value) => setFormData({
                     ...formData,
                     dataNascimento: value
                   })}
-                  placeholder="Dia/Mês/Ano início"
+                  placeholder="Dia/Mês/Ano"
                 />
               </div>
             </div>
 
-            <div>
-              <Label>Endereço</Label>
-              <Input
-                placeholder="Cidade - Estado"
-                value={formData.endereco}
-                onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-                className="mt-1"
-                maxLength={90}
-              />
-            </div>
-
-            <div>
-              <Label>Email pessoal completo *</Label>
-              <Input
-                placeholder="Ex: JoãoCrispim@gmail.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1"
-                maxLength={50}
-              />
+            {/* Experiências - DINÂMICO */}
+            <div className="border rounded-lg p-4">
+              <Label className="font-semibold mb-2 block flex items-center gap-2">
+                <Briefcase className="w-4 h-4" />
+                Experiências Profissionais *
+              </Label>
+              {experiencias.map((exp) => (
+                <div key={exp.id} className="bg-gray-50 p-3 rounded-lg mb-2">
+                  <div className="flex justify-between items-start text-black flex-wrap">
+                    <div className="flex-1">
+                      <p className="font-semibold">{exp.cargo} @ {exp.empresa}</p>
+                      <p className="text-sm text-gray-500">{exp.dataInicio} - {exp.dataFim || 'atual'}</p>
+                      <p className="text-sm mt-1">{exp.descricao}</p>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => removerExperiencia(exp.id)}>
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <div className="flex flex-col gap-2 mt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Input placeholder="Empresa" maxLength={45} value={novaExperiencia.empresa} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, empresa: e.target.value })} />
+                  <Input placeholder="Cargo" maxLength={45} value={novaExperiencia.cargo} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, cargo: e.target.value })} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <MonthPicker
+                    value={novaExperiencia.dataInicio}
+                    onChange={(value) => setNovaExperiencia({
+                      ...novaExperiencia,
+                      dataInicio: value
+                    })}
+                    placeholder="Mês/Ano início"
+                  />
+                  <MonthPicker
+                    value={novaExperiencia.dataFim}
+                    onChange={(value) => setNovaExperiencia({
+                      ...novaExperiencia,
+                      dataFim: value
+                    })}
+                    placeholder="Mês/Ano final"
+                  />
+                </div>
+                <Textarea placeholder="Descrição das atividades" maxLength={150} value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
+                {experiencias.length < 3 ? (
+                  <Button onClick={adicionarExperiencia} variant="outline" className="w-auto">
+                    Adicionar Experiência
+                  </Button>
+                ) : (
+                  <div className='text-red-600 text-sm text-center'>
+                    Na versão free, só 3 experiências podem ser adicionadas!
+                  </div>
+                )}
+              </div>
             </div>
             
             {/* Redes Sociais - DINÂMICO */}
             <div className="border rounded-lg p-4">
-              <Label className="font-semibold mb-2 block"> Redes Sociais</Label>
+              <Label className="font-semibold mb-2 block">Redes Sociais</Label>
               {redesSociais.map((rede) => (
-                <div key={rede.id} className="flex items-center gap-2 mb-2">
+                <div key={rede.id} className="flex items-center gap-2 mb-2 flex-wrap">
                   {rede.tipo === 'linkedin' && <FolderGit className="w-4 h-4 text-blue-600" />}
                   {rede.tipo === 'github' && <NetworkIcon className="w-4 h-4 text-gray-800" />}
                   {rede.tipo === 'instagram' && <User2Icon className="w-4 h-4 text-pink-600" />}
-                  <span className="text-sm flex-1">{rede.url}</span>
+                  <span className="text-sm flex-1 break-words">{rede.url}</span>
                   <Button variant="ghost" size="sm" onClick={() => removerRedeSocial(rede.id)}>
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
                 </div>
               ))}
-              <div className="flex gap-2 mt-2 text-gray-400">
+              <div className="flex flex-col sm:flex-row gap-2 mt-2 text-black">
                 <select
                   value={novaRedeTipo}
                   onChange={(e) => setNovaRedeTipo(e.target.value as any)}
@@ -406,100 +501,8 @@ export default function CurriculoIAPage() {
                   maxLength={60}
                 />
                 <Button onClick={adicionarRedeSocial} variant="outline" size="sm">
-                  <Plus className="w-4 h-4" />
+                  Adicionar Rede
                 </Button>
-              </div>
-            </div>
-
-            {/* Profissão e Nível */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label>Profissão *</Label>
-                <Input
-                  placeholder="Ex: Desenvolvedor Front-end"
-                  value={formData.profissao}
-                  onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
-                  className="mt-1"
-                  maxLength={50}
-                />
-              </div>
-              <div>
-                <Label>Nível profissional *</Label>
-                <select
-                  value={formData.nivel}
-                  onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
-                  className="w-full mt-1 px-3 py-2 border rounded-lg text-gray-400"
-                >
-                  {niveis.map((n) => (
-                    <option key={n.value} value={n.value}>{n.label}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Habilidades */}
-            <div>
-              <Label>Habilidades técnicas *</Label>
-              <Input
-                placeholder="React, TypeScript, Python (separadas por vírgula)"
-                value={formData.habilidades}
-                onChange={(e) => setFormData({ ...formData, habilidades: e.target.value })}
-                className="mt-1"
-                maxLength={120}
-              />
-            </div>
-
-            {/* Experiências - DINÂMICO */}
-            <div className="border rounded-lg p-4">
-              <Label className="font-semibold mb-2 block flex items-center gap-2">
-                <Briefcase className="w-4 h-4" />
-                Experiências Profissionais *
-              </Label>
-              {experiencias.map((exp) => (
-                <div key={exp.id} className="bg-gray-50 p-3 rounded-lg mb-2">
-                  <div className="flex justify-between items-start text-black">
-                    <div>
-                      <p className="font-semibold">{exp.cargo} @ {exp.empresa}</p>
-                      <p className="text-sm text-gray-500">{exp.dataInicio} - {exp.dataFim || 'atual'}</p>
-                      <p className="text-sm mt-1">{exp.descricao}</p>
-                    </div>
-                    <Button variant="ghost" size="sm" onClick={() => removerExperiencia(exp.id)}>
-                      <Trash2 className="w-4 h-4 text-red-500" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2" lang="pt-BR">
-                <Input placeholder="Empresa" maxLength={45} value={novaExperiencia.empresa} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, empresa: e.target.value })} />
-                <Input placeholder="Cargo" maxLength={45} value={novaExperiencia.cargo} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, cargo: e.target.value })} />
-                <MonthPicker
-                  value={novaExperiencia.dataInicio}
-                  onChange={(value) => setNovaExperiencia({
-                    ...novaExperiencia,
-                    dataInicio: value
-                  })}
-                  placeholder="Mês/Ano início"
-                />
-
-                <MonthPicker
-                  value={novaExperiencia.dataInicio}
-                  onChange={(value) => setNovaExperiencia({
-                    ...novaExperiencia,
-                    dataFim: value
-                  })}
-                  placeholder="Mês/Ano final"
-                />
-                <Textarea placeholder="Descrição das atividades" maxLength={150} className="md:col-span-2" value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
-
-                {experiencias.length < 3  ? (
-                  <Button onClick={adicionarExperiencia} variant="outline" className="flex w-15">
-                    <Plus className="w-6 h-6" />
-                  </Button>
-                ):(
-                  <div className='flex flex-1 text-red-900'>
-                    Na versão free, só 3 experiências podem ser adicionadas!
-                  </div>
-                )}
               </div>
             </div>
 
@@ -511,7 +514,7 @@ export default function CurriculoIAPage() {
               </Label>
               {educacoes.map((edu) => (
                 <div key={edu.id} className="bg-gray-50 p-3 rounded-lg mb-2">
-                  <div className="flex justify-between items-start text-black">
+                  <div className="flex justify-between items-start text-black flex-wrap">
                     <div>
                       <p className="font-semibold">{edu.curso}</p>
                       <p className="text-sm text-gray-500">{edu.instituicao}</p>
@@ -523,32 +526,35 @@ export default function CurriculoIAPage() {
                   </div>
                 </div>
               ))}
-              <div className="flex grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                <Input placeholder="Instituição" maxLength={45} value={novaEducacao.instituicao} onChange={(e) => setNovaEducacao({ ...novaEducacao, instituicao: e.target.value })} />
-                <Input placeholder="Curso" maxLength={45} value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
-                <MonthPicker
-                  value={novaExperiencia.dataInicio}
-                  onChange={(value) => setNovaEducacao({
-                    ...novaEducacao,
-                    dataInicio: value
-                  })}
-                  placeholder="Mês/Ano início"
-                />
-                
-                <MonthPicker
-                  value={novaExperiencia.dataInicio}
-                  onChange={(value) => setNovaEducacao({
-                    ...novaEducacao,
-                    dataFim: value
-                  })}
-                  placeholder="Mês/Ano início"
-                />
-                {educacoes.length < 3  ? (
-                  <Button onClick={adicionarEducacao} variant="outline" className="flex w-15">
-                    <Plus className="w-6 h-6" />
+              <div className="flex flex-col gap-2 mt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Input placeholder="Instituição" maxLength={45} value={novaEducacao.instituicao} onChange={(e) => setNovaEducacao({ ...novaEducacao, instituicao: e.target.value })} />
+                  <Input placeholder="Curso" maxLength={45} value={novaEducacao.curso} onChange={(e) => setNovaEducacao({ ...novaEducacao, curso: e.target.value })} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <MonthPicker
+                    value={novaEducacao.dataInicio}
+                    onChange={(value) => setNovaEducacao({
+                      ...novaEducacao,
+                      dataInicio: value
+                    })}
+                    placeholder="Mês/Ano início"
+                  />
+                  <MonthPicker
+                    value={novaEducacao.dataFim}
+                    onChange={(value) => setNovaEducacao({
+                      ...novaEducacao,
+                      dataFim: value
+                    })}
+                    placeholder="Mês/Ano fim"
+                  />
+                </div>
+                {educacoes.length < 3 ? (
+                  <Button onClick={adicionarEducacao} variant="outline" className="w-auto">
+                    Adicionar Formação
                   </Button>
-                ):(
-                  <div className='flex flex-1 text-red-900'>
+                ) : (
+                  <div className='text-red-600 text-sm text-center'>
                     Na versão free, só 3 formações podem ser adicionadas!
                   </div>
                 )}
@@ -562,28 +568,27 @@ export default function CurriculoIAPage() {
                 Idiomas
               </Label>
               {idiomas.map((idioma) => (
-                <div key={idioma.id} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg mb-2 text-black">
+                <div key={idioma.id} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg mb-2 text-black flex-wrap gap-2">
                   <span>{idioma.nome} - <span className="capitalize">{idioma.nivel}</span></span>
                   <Button variant="ghost" size="sm" onClick={() => removerIdioma(idioma.id)}>
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
                 </div>
               ))}
-              <div className="flex gap-2 mt-2">
+              <div className="flex flex-col sm:flex-row gap-2 mt-2">
                 <Input placeholder="Idioma (ex: Inglês)" value={novoIdioma.nome} onChange={(e) => setNovoIdioma({ ...novoIdioma, nome: e.target.value })} className="flex-1" />
-                <select value={novoIdioma.nivel} onChange={(e) => setNovoIdioma({ ...novoIdioma, nivel: e.target.value as any })} className="px-3 py-2 border rounded-lg text-gray-400">
+                <select value={novoIdioma.nivel} onChange={(e) => setNovoIdioma({ ...novoIdioma, nivel: e.target.value as any })} className="px-3 py-2 border rounded-lg text-black">
                   <option value="basico">Básico</option>
                   <option value="intermediario">Intermediário</option>
                   <option value="avancado">Avançado</option>
                   <option value="fluente">Fluente</option>
                 </select>
-
-                {idiomas.length < 3  ? (
-                  <Button onClick={adicionarIdioma} variant="outline" className="flex w-15">
-                    <Plus className="w-6 h-6" />
+                {idiomas.length < 3 ? (
+                  <Button onClick={adicionarIdioma} variant="outline" className="w-auto">
+                    Adicionar Idioma
                   </Button>
-                ):(
-                  <div className='flex flex-1 text-red-900'>
+                ) : (
+                  <div className='text-red-600 text-sm text-center'>
                     Na versão free, só 3 idiomas podem ser adicionados!
                   </div>
                 )}
@@ -598,11 +603,11 @@ export default function CurriculoIAPage() {
               </Label>
               {projetos.map((projeto) => (
                 <div key={projeto.id} className="bg-gray-50 p-3 rounded-lg mb-2 text-black">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start flex-wrap gap-2">
                     <div className="flex-1">
                       <p className="font-semibold">{projeto.nome}</p>
                       <p className="text-sm text-gray-600">{projeto.descricao}</p>
-                      {projeto.link && <a href={projeto.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline">{projeto.link}</a>}
+                      {projeto.link && <a href={projeto.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline break-words">{projeto.link}</a>}
                     </div>
                     <Button variant="ghost" size="sm" onClick={() => removerProjeto(projeto.id)}>
                       <Trash2 className="w-4 h-4 text-red-500" />
@@ -614,13 +619,12 @@ export default function CurriculoIAPage() {
                 <Input placeholder="Nome do projeto" value={novoProjeto.nome} onChange={(e) => setNovoProjeto({ ...novoProjeto, nome: e.target.value })} />
                 <Textarea placeholder="Descrição do projeto" value={novoProjeto.descricao} onChange={(e) => setNovoProjeto({ ...novoProjeto, descricao: e.target.value })} rows={2} />
                 <Input placeholder="Link do projeto (GitHub, deploy...)" value={novoProjeto.link} onChange={(e) => setNovoProjeto({ ...novoProjeto, link: e.target.value })} />
-
-                {projetos.length < 3  ? (
-                  <Button onClick={adicionarProjeto} variant="outline" className="flex w-15">
-                    <Plus className="w-6 h-6" />
+                {projetos.length < 3 ? (
+                  <Button onClick={adicionarProjeto} variant="outline" className="w-full">
+                    Adicionar Projeto
                   </Button>
-                ):(
-                  <div className='flex flex-1 text-red-900'>
+                ) : (
+                  <div className='text-red-600 text-sm text-center'>
                     Na versão free, só 3 projetos podem ser adicionados!
                   </div>
                 )}
@@ -628,11 +632,14 @@ export default function CurriculoIAPage() {
             </div>
 
             {/* Botões de ação */}
-            <div className="flex gap-4 pt-4">
-              <Button onClick={gerarCurriculo} disabled={loading || formData.nome.length === 0 || formData.email.length === 0 
-                || formData.profissao.length === 0 || formData.habilidades.length === 0} className="flex flex-1 justify-center   bg-purple-600 hover:bg-purple-700">
-                {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="flex w-4 h-4 mr-2" />}
-                {loading ? 'Gerando...' : 'Gerar Currículo com IA'}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button 
+                onClick={gerarCurriculo} 
+                disabled={loading || !formData.nome || !formData.email || !formData.profissao || !formData.habilidades} 
+                className="flex-1 bg-purple-600 hover:bg-purple-700"
+              >
+                {loading && <Loader2 className="w-3 h-3 animate-spin mr-2" /> }
+                {loading ? 'Gerando...' : 'Gerar Currículo'}
               </Button>
               <Button onClick={limparFormulario} variant="outline" className="flex-1">Limpar tudo</Button>
             </div>
@@ -648,7 +655,7 @@ export default function CurriculoIAPage() {
               <CardTitle className="flex items-center justify-between flex-wrap gap-2">
                 <span className="flex items-center gap-2"><Sparkles className="w-5 h-5 text-purple-500" /> Currículo gerado pela IA</span>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => copiarTexto(JSON.stringify(resultado, null, 2))}><Copy className="w-4 h-4 mr-1" /> Copiar tudo</Button>
+                  <Button variant="outline" size="sm" onClick={() => copiarTexto(JSON.stringify(resultado, null, 2))}><Copy className="w-4 h-4 mr-1" /> Copiar</Button>
                   <Button variant="outline" size="sm" onClick={handleDownloadPDF} disabled={downloadLoading}>
                     {downloadLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     <span className="ml-1">PDF</span>
@@ -658,19 +665,19 @@ export default function CurriculoIAPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2"> Resumo Profissional</h3>
+                <h3 className="font-semibold text-blue-900 mb-2">📌 Resumo Profissional</h3>
                 <p className="text-gray-700">{resultado.resumoProfissional}</p>
                 <Button variant="ghost" size="sm" className="mt-2" onClick={() => copiarTexto(resultado.resumoProfissional)}><Copy className="w-3 h-3 mr-1" /> Copiar</Button>
               </div>
 
               <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-green-900 mb-2"> Experiência Otimizada</h3>
+                <h3 className="font-semibold text-green-900 mb-2">💼 Experiência Otimizada</h3>
                 <p className="text-gray-700 whitespace-pre-wrap">{resultado.descricoesMelhoradas}</p>
                 <Button variant="ghost" size="sm" className="mt-2" onClick={() => copiarTexto(resultado.descricoesMelhoradas)}><Copy className="w-3 h-3 mr-1" /> Copiar</Button>
               </div>
 
               <div className="bg-purple-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-purple-900 mb-2"> Palavras-chave ATS</h3>
+                <h3 className="font-semibold text-purple-900 mb-2">🔑 Palavras-chave ATS</h3>
                 <div className="flex flex-wrap gap-2 mb-2">{resultado.palavrasChaveATS.map((kw, i) => (<span key={i} className="bg-purple-200 text-purple-800 px-2 py-1 rounded text-sm">{kw}</span>))}</div>
                 <Button variant="ghost" size="sm" onClick={() => copiarTexto(resultado.palavrasChaveATS.join(', '))}><Copy className="w-3 h-3 mr-1" /> Copiar lista</Button>
               </div>
@@ -682,7 +689,7 @@ export default function CurriculoIAPage() {
       {/* Dica */}
       {!resultado && !loading && (
         <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
-          <CardContent className="p-4"><p className="text-sm text-gray-600"><span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
+          <CardContent className="p-4"><p className="text-sm text-gray-600">💡 <span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
         </Card>
       )}
     </div>

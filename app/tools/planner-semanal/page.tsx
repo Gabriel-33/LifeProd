@@ -320,8 +320,7 @@ export default function PlannerSemanalPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" />
-                    Gerar Planner com IA
+                    Gerar Planner
                   </>
                 )}
               </Button>

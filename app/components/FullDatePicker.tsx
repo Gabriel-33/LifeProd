@@ -33,10 +33,10 @@ export function FullDatePicker({ value, onChange, placeholder }: FullDatePickerP
     <DatePicker
       selected={selectedDate}
       onChange={handleChange}
-      dateFormat="dd/MM/yyyy"  // ← CORREÇÃO: dd/MM/yyyy (minúsculo)
+      dateFormat="dd/MM/yyyy"
       locale={ptBR}
       placeholderText={placeholder || "DD/MM/AAAA"}
-      className="w-full px-13 py-2 mt-1 ml-10 border border-gray-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="w-full px-3 py-2 mt-1 border border-gray-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
     />
   );
 }

@@ -28,3 +28,35 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ajustes de responsividade para o react-datepicker */
+.react-datepicker-wrapper {
+  width: 100%;
+  display: block !important;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+  display: block !important;
+}
+
+.react-datepicker__input-container input {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Para telas pequenas */
+@media (max-width: 640px) {
+  .react-datepicker {
+    font-size: 12px !important;
+  }
+  
+  .react-datepicker__month-container {
+    width: 100% !important;
+  }
+  
+  .react-datepicker__day {
+    width: 2rem !important;
+    line-height: 2rem !important;
+  }
+}

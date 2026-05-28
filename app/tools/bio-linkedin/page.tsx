@@ -156,7 +156,7 @@ Retorne APENAS o JSON solicitado.`;
                 placeholder="Ex: Desenvolvedor Full Stack, Gerente de Marketing, Consultor de Vendas..."
                 value={formData.profissao}
                 onChange={(e) => setFormData({ ...formData, profissao: e.target.value })}
-                className="mt-2 text-base py-3 w-full"
+                className="mt-2 text-base py-2 w-full"
                 maxLength={50}
               />
             </div>
@@ -181,7 +181,7 @@ Retorne APENAS o JSON solicitado.`;
               <select
                 value={formData.tom}
                 onChange={(e) => setFormData({ ...formData, tom: e.target.value })}
-                className="w-full mt-2 px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="w-full mt-2 px-4 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               >
                 {tons.map(t => (
                   <option key={t.value} value={t.value} className="text-black">{t.label}</option>
@@ -202,8 +202,7 @@ Retorne APENAS o JSON solicitado.`;
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" />
-                    Gerar Bio com IA
+                    Gerar Bio
                   </>
                 )}
               </Button>

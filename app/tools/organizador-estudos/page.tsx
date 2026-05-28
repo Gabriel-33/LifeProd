@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { exportCalendarioEstudosPdf } from './exportCalendario';
-import { Materia, CronogramaDia, EstudoResultado } from './estudosInterfaces';
+import { Materia, EstudoResultado } from './estudosInterfaces';
 import { Label } from '../../components/ui/label';
 import { Brain, Loader2, Copy, Sparkles, BookOpen, Calendar, Clock, Target, Plus, Trash2, Save, PlusCircle } from 'lucide-react';
 
@@ -27,7 +27,7 @@ export default function OrganizadorEstudosPage() {
   const [dataProva, setDataProva] = useState('');
   const [pdfLoading, setPdfLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [mostrarFormulario, setMostrarFormulario] = useState(true);
   
   const [loading, setLoading] = useState(false);
   const [resultado, setResultado] = useState<EstudoResultado | null>(null);
@@ -285,34 +285,36 @@ export default function OrganizadorEstudosPage() {
               {/* Matérias */}
               <div>
                 <Label className="text-base font-semibold mb-2 block">Matérias para estudar *</Label>
-                <div className="flex gap-2 mb-3">
+                <div className="flex flex-col sm:flex-row gap-2 mb-3">
                   <Input
                     placeholder="Ex: Matemática, Português, História..."
                     value={novaMateria}
                     onChange={(e) => setNovaMateria(e.target.value)}
-                    className="flex-1"
+                    className="mt-2 text-base py-3 w-full"
                     onKeyPress={(e) => e.key === 'Enter' && adicionarMateria()}
                   />
-                  <select
-                    value={dificuldade}
-                    onChange={(e) => setDificuldade(Number(e.target.value) as 1|2|3|4)}
-                    className="w-32 px-3 py-2 border border-gray-300 rounded-lg text-black"
-                  >
-                    <option value={1}>Fácil</option>
-                    <option value={2}>Médio</option>
-                    <option value={3}>Difícil</option>
-                    <option value={4}>Muito difícil</option>
-                  </select>
-                  
-                  {materias.length < 5  ? (
-                    <Button onClick={adicionarMateria} variant="outline" size="sm">
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  ):(
-                    <div className='flex flex-1 text-red-900'>
-                      Na versão free, só 5 matérias podem ser adicionadas!
-                    </div>
-                  )};
+                  <div className="flex gap-1 mt-0">
+                    <select
+                      value={dificuldade}
+                      onChange={(e) => setDificuldade(Number(e.target.value) as 1|2|3|4)}
+                      className="mt-2 text-base py-3 w-full border border-gray-300 rounded-lg text-black"
+                    >
+                      <option value={1}>Fácil</option>
+                      <option value={2}>Médio</option>
+                      <option value={3}>Difícil</option>
+                      <option value={4}>Muito difícil</option>
+                    </select>
+                    
+                    {materias.length < 5 ? (
+                      <Button onClick={adicionarMateria} variant="outline" size="sm" className='mt-2 text-base py-3'>
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                    ) : (
+                      <div className='flex items-center text-red-600 text-sm whitespace-nowrap'>
+                        ⚠️ Máximo 5 matérias
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {materias.length > 0 && (
@@ -363,8 +365,7 @@ export default function OrganizadorEstudosPage() {
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Gerar Plano com IA
+                      Gerar
                     </>
                   )}
                 </Button>
