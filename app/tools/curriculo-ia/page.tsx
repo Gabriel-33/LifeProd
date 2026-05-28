@@ -470,7 +470,7 @@ export default function CurriculoIAPage() {
             </div>
             
             {/* Redes Sociais - DINÂMICO */}
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 text-black">
               <Label className="font-semibold mb-2 block">Redes Sociais</Label>
               {redesSociais.map((rede) => (
                 <div key={rede.id} className="flex items-center gap-2 mb-2 flex-wrap">
@@ -632,13 +632,13 @@ export default function CurriculoIAPage() {
             </div>
 
             {/* Botões de ação */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex gap-3 pt-2">
               <Button 
                 onClick={gerarCurriculo} 
                 disabled={loading || !formData.nome || !formData.email || !formData.profissao || !formData.habilidades} 
-                className="flex-1 bg-purple-600 hover:bg-purple-700"
+                className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
-                {loading && <Loader2 className="w-3 h-3 animate-spin mr-2" /> }
+                {loading && <Loader2 className="w-4 h-4 animate-spin" /> }
                 {loading ? 'Gerando...' : 'Gerar Currículo'}
               </Button>
               <Button onClick={limparFormulario} variant="outline" className="flex-1">Limpar tudo</Button>

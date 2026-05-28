@@ -322,7 +322,7 @@ export default function OrganizadorEstudosPage() {
                     {materias.map((m) => (
                       <div key={m.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
-                          <span className="font-medium">{m.nome}</span>
+                          <span className="font-medium text-black">{m.nome}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700">
                             {'L'.repeat(m.dificuldade)}
                           </span>
