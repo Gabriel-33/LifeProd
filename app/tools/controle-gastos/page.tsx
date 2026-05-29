@@ -394,7 +394,7 @@ export default function ControleGastosPage() {
                     </Button>
                   </div>
                 ))
-              )}
+              )}j
             </div>
           </CardContent>
         </Card>
