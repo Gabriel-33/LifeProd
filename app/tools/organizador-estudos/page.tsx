@@ -599,9 +599,9 @@ export default function OrganizadorEstudosPage() {
                   </h3>
                   <div className="space-y-2">
                     {resultado.materiasPrioridade.map((m, i) => (
-                      <div key={i} className="flex justify-between items-center p-2 bg-white rounded">
-                        <span className="font-medium text-black">{m.nome}</span>
-                        <span className="text-purple-600 font-semibold">{m.horasSemanais}h/semana</span>
+                      <div key={i} className="flex flex-col sm:flex-row justify-between p-2 bg-white rounded gap-1">
+                        <span className="font-medium text-black text-center sm:text-left">{m.nome}</span>
+                        <span className="text-purple-600 font-semibold text-center">{m.horasSemanais}h/semana</span>
                       </div>
                     ))}
                   </div>
