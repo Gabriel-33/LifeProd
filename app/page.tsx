@@ -20,8 +20,9 @@ import {
   ArrowRight,
   Sparkles,
   Flame,
-  BarChart2,
+  DollarSign,
   HeartPulse,
+  CirclePoundSterlingIcon
 } from 'lucide-react';
 
 const tools = [
@@ -31,7 +32,8 @@ const tools = [
   { name: 'Planner Semanal', href: 'tools/planner-semanal', icon: Calendar, color: 'bg-orange-500', category: 'Produtividade' },
   { name: 'Checklist', href: 'tools/checklist', icon: CheckSquare, color: 'bg-teal-500', category: 'Produtividade' },
   { name: 'Streak de hábitos', href: 'tools/streak-habitos', icon: CalendarClock, color: 'bg-red-500', category: 'Produtividade' },
-  { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Utilidades' },
+  { name: 'Controle de gastos', href: 'tools/controle-gastos', icon: CirclePoundSterlingIcon, color: 'bg-green-500', category: 'Financas' },
+  { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Financas' },
   { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'Utilidades' },
   { name: 'Contador Caracteres', href: 'tools/contador-caracteres', icon: Type, color: 'bg-gray-500', category: 'Utilidades' },
 ];
@@ -140,6 +142,32 @@ export default function Home() {
                     </CardHeader>
                     <CardContent>
                       <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">Produtividade</span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Finanças */}
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-1 h-8 bg-green-500 rounded-full"></div>
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-800">Finanças</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {tools.filter(t => t.category === 'Financas').map((tool) => (
+                <Link href={tool.href} key={tool.name}>
+                  <Card className="hover:shadow-lg transition cursor-pointer h-full">
+                    <CardHeader>
+                      <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
+                        <tool.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                      </div>
+                      <CardTitle className="text-base md:text-lg">{tool.name}</CardTitle>
+                      <CardDescription>Gerencie suas finanças</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-blue-700">Finanças</span>
                     </CardContent>
                   </Card>
                 </Link>
@@ -274,26 +302,40 @@ export default function Home() {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <BarChart2 className="w-5 h-5 text-green-600" />
+              <DollarSign className="w-5 h-5 text-green-600" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Juros compostos: o poder do dinheiro no tempo</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Controle de Gastos: o primeiro passo para a saúde financeira</h2>
           </div>
+          
           <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
-            Einstein teria chamado os juros compostos de "a oitava maravilha do mundo". Brincadeiras à parte, entender como os juros compostos funcionam é uma das habilidades financeiras mais importantes que existe — tanto para investir quanto para evitar dívidas que crescem exponencialmente.
-
-            A lógica é simples: nos juros compostos, os juros de cada período são calculados sobre o valor acumulado, não apenas sobre o capital inicial. Isso cria um efeito de crescimento exponencial. Quanto antes você começa a investir, mais tempo o dinheiro tem para multiplicar — mesmo que os aportes sejam pequenos.
-
-            Use nossa calculadora para simular quanto seu dinheiro pode render com diferentes taxas e prazos, ou calcule o custo real de um parcelamento antes de fechar negócio.
+            Você sabe exatamente para onde vai o seu dinheiro no fim do mês? Pequenos gastos do dia a dia, como 
+            café, transporte e lanches, muitas vezes passam despercebidos — mas somados, podem comprometer 
+            todo o seu orçamento. O primeiro passo para organizar as finanças é justamente esse: <strong>enxergar 
+            para onde o dinheiro está indo</strong>.
           </p>
+
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            Com o <strong>Controle de Gastos</strong> do LifeProd, você registra todas as suas receitas e despesas 
+            de forma simples e rápida. Categorize seus gastos por tipo (alimentação, transporte, lazer, etc.), 
+            acompanhe seu saldo mensal e veja exatamente onde dá para cortar despesas. Tudo é salvo automaticamente 
+            no seu navegador, sem necessidade de cadastro.
+          </p>
+
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-8">
+            O segredo para uma vida financeira saudável não é ganhar mais, é <strong>gastar com consciência</strong>. 
+            Pequenos ajustes no dia a dia, como reduzir gastos supérfluos ou planejar melhor as compras, podem 
+            gerar uma economia significativa no fim do ano. Comece hoje mesmo a tomar controle do seu dinheiro.
+          </p>
+
           <div className="bg-green-50 border border-green-100 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-gray-800 text-lg">Simule seus investimentos agora</p>
-              <p className="text-gray-500 text-sm">Descubra quanto seu dinheiro pode render com juros compostos.</p>
+              <p className="font-semibold text-gray-800 text-lg">Organize suas finanças agora</p>
+              <p className="text-gray-500 text-sm">Registre suas receitas e despesas e tenha o controle total do seu dinheiro.</p>
             </div>
-            <Link href="tools/juros">
+            <Link href="tools/controle-gastos">
               <Button className="bg-green-600 hover:bg-green-700 text-white whitespace-nowrap">
                 <div className='flex'>
-                  Calcular juros <ArrowRight className="ml-2 w-4 h-4" />
+                  Controlar gastos <ArrowRight className="ml-2 w-4 h-4" />
                 </div>
               </Button>
             </Link>
