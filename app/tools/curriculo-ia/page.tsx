@@ -71,6 +71,7 @@ export default function CurriculoIAPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [resultado, setResultado] = useState<CurriculoResultado | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -164,21 +165,21 @@ export default function CurriculoIAPage() {
 
   // ─── Gerar currículo com IA ──────────────────────────────────────────────
   async function gerarCurriculo() {
-    if (!formData.profissao) {
-      setError('Preencha pelo menos a profissão');
+    const isFormValid = formData.nome.length > 0 && formData.email.length > 0 && 
+    formData.profissao.length > 0 && formData.habilidades && experiencias.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      setError('Preencha os campos com *');
       return;
     }
 
     setLoading(true);
     setError(null);
     setResultado(null);
+    SetIsFormValid(true);
 
-    const { redesTexto, experienciasTexto, educacoesTexto, idiomasTexto, projetosTexto } = formatarDadosParaPrompt();
-
-    const habilidadesArray = formData.habilidades
-      .split(',')
-      .map((h) => h.trim())
-      .filter((h) => h);
+    const { experienciasTexto, educacoesTexto, projetosTexto } = formatarDadosParaPrompt();
 
     const prompt = `
       Você é um especialista em recrutamento e currículos ATS.
@@ -336,6 +337,7 @@ export default function CurriculoIAPage() {
                   className="mt-1 w-full"
                   maxLength={60}
                 />
+                {!isFormValid && formData.nome.length == 0 && <Label className='text-red-900'>O nome é obrigatório*</Label>}
               </div>
 
               <div>
@@ -347,6 +349,7 @@ export default function CurriculoIAPage() {
                   className="mt-1"
                   maxLength={50}
                 />
+                {!isFormValid && formData.email.length == 0 && <Label className='text-red-900'>O email é obrigatório*</Label>}
               </div>
             </div>
 
@@ -361,6 +364,7 @@ export default function CurriculoIAPage() {
                   className="mt-1"
                   maxLength={50}
                 />
+                {!isFormValid && formData.profissao.length == 0 && <Label className='text-red-900'>A profissão é obrigatória*</Label>}
               </div>
               <div>
                 <Label>Nível profissional *</Label>
@@ -373,6 +377,7 @@ export default function CurriculoIAPage() {
                     <option key={n.value} value={n.value}>{n.label}</option>
                   ))}
                 </select>
+                {!isFormValid && formData.nivel.length == 0 && <Label className='text-red-900'>O nível profissional é obrigatório*</Label>}
               </div>
             </div>
 
@@ -386,6 +391,7 @@ export default function CurriculoIAPage() {
                 className="mt-1"
                 maxLength={120}
               />
+              {!isFormValid && formData.habilidades.length == 0 && <Label className='text-red-900'>As habilidades técnicas são obrigatórias*</Label>}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -455,6 +461,7 @@ export default function CurriculoIAPage() {
                     })}
                     placeholder="Mês/Ano final"
                   />
+                  {!isFormValid && experiencias.length == 0 && <Label className='text-red-900'>Insira pelo menos uma experiência*</Label>}
                 </div>
                 <Textarea placeholder="Descrição das atividades" maxLength={150} value={novaExperiencia.descricao} onChange={(e) => setNovaExperiencia({ ...novaExperiencia, descricao: e.target.value })} rows={2} />
                 {experiencias.length < 3 ? (
@@ -635,7 +642,7 @@ export default function CurriculoIAPage() {
             <div className="flex gap-3 pt-2">
               <Button 
                 onClick={gerarCurriculo} 
-                disabled={loading || !formData.nome || !formData.email || !formData.profissao || !formData.habilidades} 
+                disabled={loading} 
                 className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading && <Loader2 className="w-4 h-4 animate-spin" /> }

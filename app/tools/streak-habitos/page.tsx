@@ -28,6 +28,7 @@ interface Habito {
 }
 
 export default function StreakHabitsPage() {
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [habitos, setHabitos] = useState<Habito[]>([]);
   const [novoHabito, setNovoHabito] = useState('');
   const [dataInicio, setDataInicio] = useState('');
@@ -172,6 +173,16 @@ export default function StreakHabitsPage() {
 
   // Adicionar novo hábito
   function adicionarHabito() {
+
+    const isFormValid = novoHabito.length > 0 && dataInicio.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      return;
+    }
+
+    SetIsFormValid(true);
+
     if (!novoHabito.trim()) return;
     
     const hoje = formatDate(new Date());
@@ -318,6 +329,7 @@ export default function StreakHabitsPage() {
                 className="mt-1"
                 onKeyPress={(e) => e.key === 'Enter' && adicionarHabito()}
               />
+              {!isFormValid && novoHabito.length == 0 && <Label className='text-red-900'>Insira o nome do hábito*</Label>}
             </div>
             <div>
               <Label>Data de início</Label>
@@ -332,6 +344,7 @@ export default function StreakHabitsPage() {
               <p className="text-xs text-gray-400 mt-1">
                 Todos os dias desde esta data serão marcados como concluídos
               </p>
+              {!isFormValid && dataInicio.length == 0 && <Label className='text-red-900'>Insira a data de início*</Label>}
             </div>
             {habitos.length < 3 ? (
               <Button onClick={adicionarHabito} className="w-full bg-orange-600 hover:bg-orange-700">

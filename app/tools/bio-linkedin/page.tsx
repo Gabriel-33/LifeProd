@@ -26,6 +26,7 @@ export default function BioLinkedinPage() {
   });
   
   const [loading, setLoading] = useState(false);
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [resultado, setResultado] = useState<BioResultado | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,12 +39,15 @@ export default function BioLinkedinPage() {
   ];
 
   async function gerarBio() {
-    if (!formData.profissao) {
+    const isFormValid = formData.profissao.length > 0;
+    if (!isFormValid) {
+      SetIsFormValid(false);
       setError('Preencha pelo menos a profissão');
       return;
     }
 
     setLoading(true);
+    SetIsFormValid(true);
     setError(null);
     setResultado(null);
 
@@ -159,6 +163,8 @@ Retorne APENAS o JSON solicitado.`;
                 className="mt-2 text-base py-2 w-full"
                 maxLength={50}
               />
+              {!isFormValid && formData.profissao.length == 0 && <Label className='text-red-900'>A profissão é obrigatória*</Label>}
+              
             </div>
 
             <div>
@@ -192,7 +198,7 @@ Retorne APENAS o JSON solicitado.`;
             <div className="flex gap-4 pt-4">
               <Button 
                 onClick={gerarBio} 
-                disabled={loading || formData.profissao.length === 0}
+                disabled={loading}
                 className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading ? (

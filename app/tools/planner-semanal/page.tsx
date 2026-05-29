@@ -26,6 +26,8 @@ import {
 
 
 export default function PlannerSemanalPage() {
+
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [planejamento, setPlanejamento] = useState<PlanejamentoSemanal | null>(null);
@@ -77,6 +79,15 @@ export default function PlannerSemanalPage() {
   }
 
   async function gerarPlanejamento() {
+    const isFormValid = objetivos.length > 0 && horasDia.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      setError('Preencha os campos com *');
+      return;
+    }
+
+    SetIsFormValid(true);
     setLoading(true);
     setError(null);
 
@@ -281,6 +292,8 @@ export default function PlannerSemanalPage() {
                 rows={3}
                 maxLength={100}
               />
+              {!isFormValid && objetivos.length == 0 && <Label className='text-red-900'>Insira os objetivos*</Label>}
+
             </div>
 
             <div>
@@ -294,6 +307,7 @@ export default function PlannerSemanalPage() {
                 min={1}
                 max={6}
               />
+              {!isFormValid && horasDia.length == 0 && <Label className='text-red-900'>Insira a quantidade de horas*</Label>}
             </div>
 
             <div>
@@ -310,7 +324,7 @@ export default function PlannerSemanalPage() {
             <div className="flex gap-3 pt-2">
               <Button 
                 onClick={gerarPlanejamento} 
-                disabled={loading || objetivos.length === 0 || horasDia.length === 0}
+                disabled={loading}
                 className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
               >
                 {loading ? (
@@ -328,12 +342,12 @@ export default function PlannerSemanalPage() {
                 Limpar
               </Button>
               
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-base">
-                  {error}
-                </div>
-              )}
             </div>
+            {error &&(
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-base">
+                {error}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

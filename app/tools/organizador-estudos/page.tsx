@@ -29,6 +29,7 @@ export default function OrganizadorEstudosPage() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [mostrarFormulario, setMostrarFormulario] = useState(true);
   
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [loading, setLoading] = useState(false);
   const [resultado, setResultado] = useState<EstudoResultado | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -139,15 +140,16 @@ export default function OrganizadorEstudosPage() {
   }
 
   async function gerarPlano() {
-    if (materias.length === 0) {
-      setError('Adicione pelo menos uma matéria');
-      return;
-    }
-    if (!horasPorDia) {
-      setError('Informe quantas horas por dia pode estudar');
+
+    const isFormValid = materias.length > 0 && horasPorDia.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      setError('Preencha os campos com *');
       return;
     }
 
+    SetIsFormValid(true);
     setLoading(true);
     setError(null);
     setResultado(null);
@@ -313,8 +315,9 @@ export default function OrganizadorEstudosPage() {
                       <div className='flex items-center text-red-600 text-sm whitespace-nowrap'>
                         ⚠️ Máximo 5 matérias
                       </div>
-                    )}
+                    )}                    
                   </div>
+                  
                 </div>
                 
                 {materias.length > 0 && (
@@ -334,6 +337,8 @@ export default function OrganizadorEstudosPage() {
                     ))}
                   </div>
                 )}
+                {!isFormValid && materias.length == 0 && <Label className='text-red-900'>Insira pelo menos uma matéria*</Label>}
+
               </div>
 
               {/* Horas por dia */}
@@ -350,12 +355,13 @@ export default function OrganizadorEstudosPage() {
                 <p className="text-sm text-gray-400 mt-1">
                   Quantas horas você consegue estudar por dia?
                 </p>
+                {!isFormValid && horasPorDia.length == 0 && <Label className='text-red-900'>Insira a quantidade de horas diárias*</Label>}
               </div>
 
               <div className="flex gap-4 pt-4">
                 <Button 
                   onClick={gerarPlano} 
-                  disabled={loading || materias.length == 0 || horasPorDia.length == 0}
+                  disabled={loading}
                   className="flex-1 bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2 h-9"
                 >
                   {loading ? (
@@ -500,7 +506,7 @@ export default function OrganizadorEstudosPage() {
                 {/* Botões de ação - plano NOVO tem botão Salvar */}
                 <div className="flex gap-3 pt-4 border-t">
                   <Button 
-                    className="flex flex-1 bg-purple-600 hover:bg-purple-700 h-9 justify-center"
+                    className="flex flex-1 bg-purple-600 hover:bg-purple-700 h-auto justify-center"
                     onClick={handleExportPDF}
                     disabled={pdfLoading}
                   >
@@ -513,7 +519,7 @@ export default function OrganizadorEstudosPage() {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="flex flex-1 h-9 justify-center"
+                    className="flex flex-1 h-auto justify-center"
                     onClick={salvarPlano}
                     disabled={saveLoading}
                   >
@@ -535,7 +541,7 @@ export default function OrganizadorEstudosPage() {
                 onClick={criarNovoPlano}
                 className="flex gap-2 h-9"
               >
-                <PlusCircle className="flex w-4 h-4" />
+                <PlusCircle className="flex w-4 h-auto" />
                 Novo plano de estudos
               </Button>
             </div>
@@ -688,15 +694,6 @@ export default function OrganizadorEstudosPage() {
           </>
         )}
 
-        {/* Loading state */}
-        {loading && (
-          <Card className="flex w-full text-center justify-center">
-            <CardContent className="flex h-9">
-              <Loader2 className="w-8 h-7 animate-spin text-purple-600 mx-auto mb-0 justify-center" />
-              <p className="text-gray-600 justify-center">Gerando seu plano de estudos personalizado...</p>
-            </CardContent>
-          </Card>
-        )}
       </div>
 
       {/* Dica de uso */}

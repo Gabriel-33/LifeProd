@@ -28,6 +28,7 @@ interface Tarefa {
 }
 
 export default function ChecklistPage() {
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [novaTarefa, setNovaTarefa] = useState('');
   const [prioridade, setPrioridade] = useState<'alta' | 'media' | 'baixa'>('media');
@@ -58,6 +59,16 @@ export default function ChecklistPage() {
   }, [tarefas, loading]);
 
   function adicionarTarefa() {
+
+    const isFormValid = novaTarefa.length > 0 && dataLimite.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      return;
+    }
+
+    SetIsFormValid(true);
+
     if (!novaTarefa.trim()) return;
 
     const nova: Tarefa = {
@@ -180,6 +191,7 @@ export default function ChecklistPage() {
                 className="mt-1"
                 onKeyPress={(e) => e.key === 'Enter' && adicionarTarefa()}
               />
+              {!isFormValid && novaTarefa.length == 0 && <Label className='text-red-900'>Insira o nome da tarefa*</Label>}
             </div>
 
             <div>
@@ -205,9 +217,10 @@ export default function ChecklistPage() {
                   )}
                   placeholder="Dia/Mês/Ano"
                 />
+                {!isFormValid && dataLimite.length == 0 && <Label className='text-red-900'>Insira a data limite*</Label>}
             </div>
 
-            <Button onClick={adicionarTarefa} disabled={loading || novaTarefa.length === 0} className="w-full bg-green-600 hover:bg-green-700">
+            <Button onClick={adicionarTarefa} disabled={loading} className="w-full bg-green-600 hover:bg-green-700">
               Adicionar tarefa
             </Button>
           </CardContent>
