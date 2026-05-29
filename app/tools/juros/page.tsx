@@ -9,12 +9,24 @@ import { Label } from '../../components/ui/label';
 import { TrendingUp, Copy, RotateCcw } from 'lucide-react';
 
 export default function JurosPage() {
+
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [valor, setValor] = useState('');
   const [taxa, setTaxa] = useState('');
   const [periodo, setPeriodo] = useState('');
   const [resultado, setResultado] = useState<{ montante: number; juros: number } | null>(null);
 
   function calcularJuros() {
+
+    const isFormValid = valor.length > 0 && taxa.length > 0 && periodo.length;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      return;
+    }
+
+    SetIsFormValid(true);
+
     const p = parseFloat(valor);
     const i = parseFloat(taxa) / 100;
     const n = parseInt(periodo);
@@ -60,6 +72,7 @@ export default function JurosPage() {
                 onChange={(e) => setValor(e.target.value)}
                 className="mt-1"
               />
+              {!isFormValid && valor.length == 0 && <Label className='text-red-900'>Insira o valor inicial(númerico)*</Label>}
             </div>
             <div>
               <Label>Taxa de juros (% ao mês)</Label>
@@ -71,6 +84,7 @@ export default function JurosPage() {
                 onChange={(e) => setTaxa(e.target.value)}
                 className="mt-1"
               />
+              {!isFormValid && taxa.length == 0 && <Label className='text-red-900'>Insira a taxa de juros(númerico)*</Label>}
             </div>
             <div>
               <Label>Período (meses)</Label>
@@ -82,9 +96,10 @@ export default function JurosPage() {
                 onChange={(e) => setPeriodo(e.target.value)}
                 className="mt-1"
               />
+              {!isFormValid && periodo.length == 0 && <Label className='text-red-900'>Insira o período(númerico)*</Label>}
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={calcularJuros} disabled={periodo.length === 0 || taxa.length === 0 || valor.length === 0} 
+              <Button onClick={calcularJuros} 
                 title="Insira as informações" className="flex-1 bg-green-600 hover:bg-green-700">
                 Calcular
               </Button>

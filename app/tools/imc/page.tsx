@@ -6,14 +6,26 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Activity, Copy, RotateCcw } from 'lucide-react';
+import { Activity, Copy } from 'lucide-react';
 
 export default function IMCPage() {
+
+  const [isFormValid, SetIsFormValid] = useState(true);
   const [peso, setPeso] = useState('');
   const [altura, setAltura] = useState('');
   const [resultado, setResultado] = useState<{ valor: number; classificacao: string; cor: string; dica: string } | null>(null);
 
   function calcularIMC() {
+
+    const isFormValid = peso.length > 0 && altura.length > 0;
+
+    if (!isFormValid) {
+      SetIsFormValid(false);
+      return;
+    }
+
+    SetIsFormValid(true);
+
     const pesoNum = parseFloat(peso);
     const alturaNum = parseFloat(altura) / 100;
     
@@ -78,6 +90,8 @@ export default function IMCPage() {
                 onChange={(e) => setPeso(e.target.value)}
                 className="mt-1"
               />
+              {!isFormValid && peso.length == 0 && <Label className='text-red-900'>Insira o peso(númerico)*</Label>}
+
             </div>
             <div>
               <Label>Altura (cm)</Label>
@@ -89,10 +103,11 @@ export default function IMCPage() {
                 onChange={(e) => setAltura(e.target.value)}
                 className="mt-1"
               />
+              {!isFormValid && altura.length == 0 && <Label className='text-red-900'>Insira a altura(númerico)*</Label>}
+
             </div>
             <div className="flex gap-3 pt-2">
-              <Button onClick={calcularIMC} title="Insira as informações" 
-               disabled={altura.length === 0 || peso.length === 0} className="flex-1 bg-blue-600 hover:bg-blue-700">
+              <Button onClick={calcularIMC} title="Insira as informações" className="flex-1 bg-blue-600 hover:bg-blue-700">
                 Calcular IMC
               </Button>
               <Button onClick={limpar} variant="outline" className='hover:bg-purple-200 flex-1 justify-center'>
