@@ -63,6 +63,7 @@ export default function CurriculoIAPage() {
   const [formData, setFormData] = useState({
     nome: '',
     dataNascimento: '',
+    requisitos:'',
     endereco: '',
     email: '',
     profissao: '',
@@ -166,7 +167,8 @@ export default function CurriculoIAPage() {
   // ─── Gerar currículo com IA ──────────────────────────────────────────────
   async function gerarCurriculo() {
     const isFormValid = formData.nome.length > 0 && formData.email.length > 0 && 
-    formData.profissao.length > 0 && formData.habilidades && experiencias.length > 0;
+    formData.profissao.length > 0 && formData.habilidades && experiencias.length > 0 && 
+    formData.dataNascimento.length > 0;
 
     if (!isFormValid) {
       SetIsFormValid(false);
@@ -185,6 +187,8 @@ export default function CurriculoIAPage() {
       Você é um especialista em recrutamento e currículos ATS.
 
       Com base nas informações do usuário, gere um currículo profissional moderno e objetivo.
+      
+      Caso informado, ajuste o currículo para dar "match" com os REQUISITOS DA VAGA de maneira realista.
 
       DADOS DO USUÁRIO:
 
@@ -202,6 +206,9 @@ export default function CurriculoIAPage() {
       PROJETOS:
       ${projetosTexto || 'Não informado'}
 
+      REQUISITOS DA VAGA:
+      ${formData.nome || 'Não informado'}
+
       Retorne APENAS um JSON válido:
 
       {
@@ -212,7 +219,7 @@ export default function CurriculoIAPage() {
       }
 
       REGRAS:
-      - Não invente empresas ou experiências
+      - Não invente empresas, experiências ou habilidades
       - O resumo deve ser profissional e otimizado para ATS
       - Use palavras-chave relevantes para a área
       - Seja objetivo e direto
@@ -289,6 +296,7 @@ export default function CurriculoIAPage() {
       dataNascimento: '',
       endereco: '',
       email: '',
+      requisitos:'',
       profissao: '',
       habilidades: '',
       nivel: 'pleno',
@@ -312,7 +320,7 @@ export default function CurriculoIAPage() {
           Currículo com IA
         </h1>
         <p className="text-lg text-gray-500 mt-2">
-          Crie um currículo profissional otimizado para ATS com campos dinâmicos
+          Crie um currículo profissional otimizado para ATS com campos dinâmicos. Informe os requisitos da vaga e a IA ajustará seu currículo para aumentar a compatibilidade com a oportunidade.
         </p>
       </div>
 
@@ -326,8 +334,21 @@ export default function CurriculoIAPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6 pt-0">
-            {/* Informações Pessoais */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Requisitos da vaga */}
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+              <div>
+                <Label>Requisitos da vaga(Opcional)</Label>
+                <Textarea
+                  placeholder="Caso você esteja concorrendo a alguma vaga específica, coloque aqui os requisitos da vaga
+                  Ex:Desenvolvedor(a) .NET Requisitos: *Experiência mínima de 3 anos em desenvolvimento de software; *Conhecimento e experiência com desenvolvimento utilizando a plataforma .NET."
+                  value={formData.requisitos}
+                  onChange={(e) => setFormData({ ...formData, requisitos: e.target.value })}
+                  className="mt-1 w-full"
+                  maxLength={300}
+                />
+              </div>
+
+              {/* Informações Pessoais */}
               <div>
                 <Label>Nome completo *</Label>
                 <Input
@@ -393,21 +414,9 @@ export default function CurriculoIAPage() {
               />
               {!isFormValid && formData.habilidades.length == 0 && <Label className='text-red-900'>As habilidades técnicas são obrigatórias*</Label>}
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label>Endereço</Label>
-                <Input
-                  placeholder="Cidade - Estado"
-                  value={formData.endereco}
-                  onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-                  className="mt-1"
-                  maxLength={90}
-                />
-              </div>
-
-              <div>
-                <Label>Data de nascimento</Label>
+            
+            <div>
+                <Label>Data de nascimento*</Label>
                 <FullDatePicker
                   value={formData.dataNascimento}
                   onChange={(value) => setFormData({
@@ -416,10 +425,10 @@ export default function CurriculoIAPage() {
                   })}
                   placeholder="Dia/Mês/Ano"
                 />
-              </div>
             </div>
+              {!isFormValid && formData.dataNascimento.length == 0 && <Label className='text-red-900'>As data de nascimento é obrigatória*</Label>}
 
-            {/* Experiências - DINÂMICO */}
+{/* Experiências - DINÂMICO */}
             <div className="border rounded-lg p-4">
               <Label className="font-semibold mb-2 block flex items-center gap-2">
                 <Briefcase className="w-4 h-4" />
@@ -475,10 +484,23 @@ export default function CurriculoIAPage() {
                 )}
               </div>
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+              <div>
+                <Label>Endereço(Opcional)</Label>
+                <Input
+                  placeholder="Cidade - Estado"
+                  value={formData.endereco}
+                  onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
+                  className="mt-1"
+                  maxLength={90}
+                />
+              </div>
+            </div>
             
             {/* Redes Sociais - DINÂMICO */}
             <div className="border rounded-lg p-4 text-black">
-              <Label className="font-semibold mb-2 block">Redes Sociais</Label>
+              <Label className="font-semibold mb-2 block">Redes Sociais(Opcional)</Label>
               {redesSociais.map((rede) => (
                 <div key={rede.id} className="flex items-center gap-2 mb-2 flex-wrap">
                   {rede.tipo === 'linkedin' && <FolderGit className="w-4 h-4 text-blue-600" />}
@@ -517,7 +539,7 @@ export default function CurriculoIAPage() {
             <div className="border rounded-lg p-4">
               <Label className="font-semibold mb-2 block flex items-center gap-2">
                 <GraduationCap className="w-4 h-4" />
-                Formação Acadêmica
+                Formação Acadêmica(Opcional)
               </Label>
               {educacoes.map((edu) => (
                 <div key={edu.id} className="bg-gray-50 p-3 rounded-lg mb-2">
@@ -572,7 +594,7 @@ export default function CurriculoIAPage() {
             <div className="border rounded-lg p-4">
               <Label className="font-semibold mb-2 block flex items-center gap-2">
                 <Globe className="w-4 h-4" />
-                Idiomas
+                Idiomas(Opcional)
               </Label>
               {idiomas.map((idioma) => (
                 <div key={idioma.id} className="flex items-center justify-between bg-gray-50 p-2 rounded-lg mb-2 text-black flex-wrap gap-2">
@@ -606,7 +628,7 @@ export default function CurriculoIAPage() {
             <div className="border rounded-lg p-4">
               <Label className="font-semibold mb-2 block flex items-center gap-2">
                 <FolderGit2 className="w-4 h-4" />
-                Projetos
+                Projetos(Opcional)
               </Label>
               {projetos.map((projeto) => (
                 <div key={projeto.id} className="bg-gray-50 p-3 rounded-lg mb-2 text-black">

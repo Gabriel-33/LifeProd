@@ -23,7 +23,6 @@ export async function generatePDF(
 
   // Cores
   const azul: [number, number, number] = [37, 99, 235];
-  const roxo: [number, number, number] = [124, 58, 237];
   const cinzaEscuro: [number, number, number] = [31, 41, 55];
   const cinzaMedio: [number, number, number] = [75, 85, 99];
   const branco: [number, number, number] = [255, 255, 255];
@@ -38,11 +37,11 @@ export async function generatePDF(
   doc.setFont('helvetica', 'bold');
   doc.text(formData.nome.toUpperCase() || 'CURRÍCULO', margemEsq, 22);
 
-  doc.setFontSize(13);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'normal');
   doc.text(`${formData.profissao}  •  Nível: ${formData.nivel.charAt(0).toUpperCase() + formData.nivel.slice(1)} •  ${formData.email}`, margemEsq, 35);
 
-  doc.setFontSize(9);
+  doc.setFontSize(13);
 
   //doc.text('Gerado com LifeProd IA', margemDir - 5, 40, { align: 'right' });
 
@@ -54,20 +53,20 @@ export async function generatePDF(
     doc.setFillColor(...corFundo);
     doc.roundedRect(margemEsq, y, larguraUtil, 9, 2, 2, 'F');
     doc.setTextColor(...branco);
-    doc.setFontSize(12);
+    doc.setFontSize(15);
     doc.setFont('helvetica', 'bold');
     doc.text(titulo, margemEsq + 5, y + 6.5);
     y += 15;
     doc.setTextColor(...cinzaEscuro);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
+    doc.setFontSize(12);
   };
 
   // ── Helper: texto com quebra automática ──
   const addTexto = (texto: string, corTexto: [number, number, number] = cinzaEscuro) => {
     if (!texto) return;
     doc.setTextColor(...corTexto);
-    doc.setFontSize(11);
+    doc.setFontSize(13);
     const linhas = doc.splitTextToSize(texto, larguraUtil - 6);
     linhas.forEach((linha: string) => {
       if (y > 265) { doc.addPage(); y = 25; }
@@ -82,7 +81,7 @@ export async function generatePDF(
     if (!valor) return;
     if (y > 265) { doc.addPage(); y = 25; }
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
+    doc.setFontSize(13);
     doc.setTextColor(...cinzaEscuro);
     doc.text(`${label}:`, margemEsq + 4, y);
     doc.setFont('helvetica', 'normal');
@@ -118,7 +117,7 @@ export async function generatePDF(
     redesSociais.forEach(rede => {
       if (y > 265) { doc.addPage(); y = 25; }
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
+      doc.setFontSize(13);
       doc.setTextColor(...cinzaEscuro);
       doc.text(`${rede.tipo.charAt(0).toUpperCase() + rede.tipo.slice(1)}:`, margemEsq + 3, y);
       doc.setFont('helvetica', 'normal');
@@ -131,6 +130,7 @@ export async function generatePDF(
 
   // ── RESUMO PROFISSIONAL ──
   secao('RESUMO PROFISSIONAL', [37, 99, 235]);
+  doc.setTextColor(...cinzaEscuro);
   doc.setFillColor(239, 246, 255);
   const linhasResumo = doc.splitTextToSize(resultado.resumoProfissional, larguraUtil - 6);
   const alturaResumo = linhasResumo.length * 6.5 + 8;
@@ -147,21 +147,21 @@ export async function generatePDF(
       doc.setFillColor(220, 250, 240);
       doc.roundedRect(margemEsq, y - 3, larguraUtil, 9, 2, 2, 'F');
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11.5);
+      doc.setFontSize(13);
       doc.setTextColor(16, 185, 129);
       doc.text(`${exp.cargo} - ${exp.empresa}`, margemEsq + 5, y + 3.5);
       y += 10;
       
       doc.setFont('helvetica', 'italic');
-      doc.setFontSize(10);
+      doc.setFontSize(13);
       doc.setTextColor(...cinzaMedio);
-      doc.text(`${exp.dataInicio} - ${exp.dataFim || 'atual'}`, margemEsq + 5, y);
+      doc.text(`${exp.dataInicio} - ${exp.dataFim || 'atual'}`, margemEsq + 5, y + 2);
       y += 7;
       
       if (exp.descricao) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...cinzaEscuro);
-        doc.setFontSize(10.5);
+        doc.setFontSize(13);
         const descLinhas = doc.splitTextToSize(exp.descricao, larguraUtil - 12);
         descLinhas.forEach((linha: string) => {
           if (y > 265) { doc.addPage(); y = 25; }
@@ -186,13 +186,13 @@ export async function generatePDF(
       doc.setFillColor(240, 235, 255);
       doc.roundedRect(margemEsq, y - 3, larguraUtil, 9, 2, 2, 'F');
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11.5);
+      doc.setFontSize(13);
       doc.setTextColor(124, 58, 237);
       doc.text(edu.curso, margemEsq + 5, y + 3.5);
       y += 10;
       
       doc.setFont('helvetica', 'italic');
-      doc.setFontSize(10);
+      doc.setFontSize(13);
       doc.setTextColor(...cinzaMedio);
       doc.text(`${edu.instituicao} | ${edu.dataInicio} - ${edu.dataFim}`, margemEsq + 5, y);
       y += 10;
@@ -206,7 +206,7 @@ export async function generatePDF(
     idiomas.forEach(idioma => {
       if (y > 265) { doc.addPage(); y = 25; }
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
+      doc.setFontSize(13);
       doc.setTextColor(...cinzaEscuro);
       doc.text(idioma.nome, margemEsq + 3, y);
       doc.setFont('helvetica', 'normal');
@@ -227,7 +227,7 @@ export async function generatePDF(
       doc.setFillColor(255, 240, 220);
       doc.roundedRect(margemEsq, y - 3, larguraUtil, 9, 2, 2, 'F');
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11.5);
+      doc.setFontSize(13);
       doc.setTextColor(249, 115, 22);
       doc.text(projeto.nome, margemEsq + 5, y + 3.5);
       y += 10;
@@ -235,7 +235,7 @@ export async function generatePDF(
       if (projeto.descricao) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(...cinzaEscuro);
-        doc.setFontSize(10.5);
+        doc.setFontSize(13);
         const descLinhas = doc.splitTextToSize(projeto.descricao, larguraUtil - 12);
         descLinhas.forEach((linha: string) => {
           if (y > 265) { doc.addPage(); y = 25; }
@@ -247,7 +247,7 @@ export async function generatePDF(
       if (projeto.link) {
         y += 2;
         doc.setTextColor(37, 99, 235);
-        doc.setFontSize(9);
+        doc.setFontSize(11);
         doc.textWithLink(projeto.link, margemEsq + 7, y, { url: projeto.link });
         y += 7;
       }
@@ -289,7 +289,7 @@ export async function generatePDF(
   resultado.palavrasChaveATS.forEach((kw, idx) => {
     doc.setFillColor(237, 233, 254);
     doc.setTextColor(109, 40, 217);
-    doc.setFontSize(10);
+    doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
     const largKw = doc.getTextWidth(kw) + 10;
     
@@ -313,7 +313,7 @@ export async function generatePDF(
     doc.setPage(i);
     doc.setDrawColor(200, 200, 210);
     doc.line(margemEsq, 287, margemDir - 5, 287);
-    doc.setFontSize(9);
+    doc.setFontSize(13);
     doc.setTextColor(...cinzaMedio);
     doc.setFont('helvetica', 'normal');
     doc.text('Gerado por LifeProd — lifeprod.com', margemEsq, 292);

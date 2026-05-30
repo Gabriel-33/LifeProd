@@ -167,7 +167,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
             </Button>
           </div>
           
-          <nav className="p-4 space-y-1 overflow-y-auto h-[calc(100vh-60px)]">
+          <nav className="p-4 space-y-1 h-full">
             <Link href="/" className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
               <Home className="w-5 h-5" />
               <span>Início</span>
