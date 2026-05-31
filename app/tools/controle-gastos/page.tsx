@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/ca
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import {Despesa} from './interfaceGastos';
+import { generatePdfGastos } from './ExportGastos';
+
 import { 
   DollarSign, 
   Plus, 
@@ -18,14 +21,6 @@ import {
   X
 } from 'lucide-react';
 
-interface Despesa {
-  id: string;
-  descricao: string;
-  valor: number;
-  categoria: string;
-  data: string;
-  tipo: 'receita' | 'despesa';
-}
 
 // Limite de 20 despesas por mês
 const LIMITE_TRANSAÇÕES = 20;
@@ -140,6 +135,7 @@ export default function ControleGastosPage() {
   const saldo = receitas - despesas;
 
   const mesAtual = new Date().toISOString().slice(0, 7);
+
   const transacoesMesAtual = transacoes.filter(t => 
     t.data.startsWith(mesAtual)
   ).length;
@@ -147,11 +143,39 @@ export default function ControleGastosPage() {
 
     // Função para formatar valores no padrão brasileiro
     function formatarMoeda(valor: number): string {
-        return valor.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }); 
+      return valor.toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+      }); 
+  }
+
+  // Adicione a função exportarGastosPdf
+  async function exportarGastosPdf() {
+    if (transacoesFiltradas.length === 0) {
+      alert('Não há transações para exportar no período selecionado.');
+      return;
     }
+
+    try {
+      await generatePdfGastos(
+        transacoesFiltradas,
+        {
+          mes: filtroMes,
+          categoria: filtroCategoria,
+        },
+        {
+          receitas: receitas,
+          despesas: despesas,
+          saldo: saldo,
+        }
+      );
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+      alert('Erro ao gerar o PDF. Tente novamente.');
+    }
+  }
+
+
   return (
     <div className="space-y-8 w-full">
       
@@ -395,7 +419,16 @@ export default function ControleGastosPage() {
                   </div>
                 ))
               )}
+              {transacoesFiltradas.length > 0 && (
+                <Button 
+                  onClick={exportarGastosPdf} 
+                  className="w-full bg-blue-600 hover:bg-green-400"
+                >
+                  Exportar Gastos
+                </Button>
+              )} 
             </div>
+            
           </CardContent>
         </Card>
       </div>
