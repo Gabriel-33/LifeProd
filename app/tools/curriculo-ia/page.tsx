@@ -617,7 +617,7 @@ export default function CurriculoIAPage() {
                     Adicionar Idioma
                   </Button>
                 ) : (
-                  <div className='text-red-600 text-sm text-center'>
+                  <div className='flex flex-1 text-red-600 text-sm text-center'>
                     Na versão free, só 3 idiomas podem ser adicionados!
                   </div>
                 )}
