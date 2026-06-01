@@ -22,7 +22,8 @@ import {
   Flame,
   DollarSign,
   HeartPulse,
-  CirclePoundSterlingIcon
+  CirclePoundSterlingIcon,
+  GraduationCap
 } from 'lucide-react';
 
 const tools = [
@@ -57,7 +58,7 @@ export default function Home() {
               <a href="#ferramentas" className="text-gray-600 hover:text-gray-900 px-2">Ferramentas</a>
               <a href="#habitos" className="text-gray-600 hover:text-gray-900 px-2">Hábitos</a>
               <a href="#curriculo" className="text-gray-600 hover:text-gray-900 px-2">Currículo</a>
-              <a href="#organizador-estudos" className="text-gray-600 hover:text-gray-900 px-2">Estudo</a>
+              <a href="#gerador-questoes" className="text-gray-600 hover:text-gray-900 px-2">Estudo</a>
               <a href="#financas" className="text-gray-600 hover:text-gray-900 px-2">Finanças</a>
               <a href="#saude" className="text-gray-600 hover:text-gray-900 px-2">Saúde</a>
               <a href="#sobre" className="text-gray-600 hover:text-gray-900 px-2">Sobre</a>
@@ -265,8 +266,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Seção Gerador de Questões */}
+      <section id="gerador-questoes" className="py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-indigo-600" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Teste seus conhecimentos com questões geradas por IA</h2>
+          </div>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            Estudar não é só ler e reler o conteúdo — é preciso testar se você realmente aprendeu. 
+            A melhor forma de fixar um assunto é através da prática ativa, respondendo perguntas 
+            que desafiam seu entendimento. Mas criar questões de qualidade consome tempo e exige 
+            conhecimento profundo do tema.
+          </p>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            Com o <strong>Gerador de Questões com IA</strong> do LifeProd, você escolhe até 4 tópicos 
+            e a inteligência artificial cria 9 questões de múltipla escolha, distribuídas automaticamente 
+            entre os níveis fácil, médio e difícil. Cada questão vem com 4 alternativas (A-D) e você pode 
+            revelar a resposta correta com um clique — perfeito para revisão, simulados e preparação para provas.
+          </p>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-8">
+            Seja para estudar matemática, história, programação ou qualquer outra matéria, as questões 
+            geradas são relevantes, educativas e adaptadas ao nível de dificuldade. Treine seu cérebro, 
+            identifique lacunas no aprendizado e avance com mais confiança.
+          </p>
+          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-gray-800 text-lg">Crie questões personalizadas agora</p>
+              <p className="text-gray-500 text-sm">Adicione seus tópicos e receba questões prontas para estudar.</p>
+            </div>
+            <Link href="tools/gerador-questoes">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white whitespace-nowrap">
+                <div className='flex'>
+                  Gerar questões <ArrowRight className="ml-2 w-4 h-4" />
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Seção Organizador de Estudos */}
-      <section id="organizador-estudos" className="py-16 md:py-20 bg-white">
+      <section id="organizador-estudos" className="py-16 md:py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -275,11 +318,19 @@ export default function Home() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Como organizar seus estudos de forma eficiente</h2>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
-            Estudar sem planejamento é como tentar chegar a um destino sem mapa. Você até avança, mas perde tempo, energia e muitas vezes estuda o que não precisa. Um bom plano de estudos considera suas dificuldades, o tempo disponível e a data da prova, distribuindo as matérias de forma inteligente.
-
-            A técnica de revisão espaçada e a distribuição proporcional de horas por dificuldade são estratégias comprovadas para melhorar a retenção de conteúdo. Matérias mais difíceis merecem mais tempo, mas também precisam de revisões frequentes para fixar o aprendizado.
-
-            Com o Organizador de Estudos com IA do LifeProd, você informa suas matérias, horas disponíveis e data da prova. A inteligência artificial cria um cronograma personalizado, com revisões espaçadas e distribuição de tempo baseada na dificuldade de cada matéria.
+            Estudar sem planejamento é como tentar chegar a um destino sem mapa. Você até avança, mas perde tempo, 
+            energia e muitas vezes estuda o que não precisa. Um bom plano de estudos considera suas dificuldades, 
+            o tempo disponível e a data da prova, distribuindo as matérias de forma inteligente.
+          </p>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            A <strong>técnica de revisão espaçada</strong> e a <strong>distribuição proporcional de horas</strong> 
+            por dificuldade são estratégias comprovadas para melhorar a retenção de conteúdo. Matérias mais difíceis 
+            merecem mais tempo, mas também precisam de revisões frequentes para fixar o aprendizado.
+          </p>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-8">
+            Com o <strong>Organizador de Estudos com IA</strong> do LifeProd, você informa suas matérias, 
+            horas disponíveis e data da prova. A inteligência artificial cria um cronograma personalizado, 
+            com revisões espaçadas e distribuição de tempo baseada na dificuldade de cada matéria.
           </p>
           <div className="bg-purple-50 border border-purple-100 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>

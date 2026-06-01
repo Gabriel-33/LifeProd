@@ -87,6 +87,7 @@ export default function RootLayout({
         <link rel="canonical" href="https://lifeprod.vercel.app" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="google-site-verification" content="pR1TwdInmqmjL86vQhk2UiMzQ5NBSttti_I_NdpnIsw" />
+        <meta name="google-adsense-account" content="ca-pub-2356473671774504"/>
       </head>
       <body className={inter.className}>{children}</body>
     </html>

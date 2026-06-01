@@ -20,13 +20,15 @@ import {
   CirclePoundSterlingIcon,
   LayoutDashboard,
   TrendingDown,
+  GraduationCap
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const tools = [
   { name: 'Currículo IA', href: 'curriculo-ia', icon: FileText, category: 'IA' },
-  { name: 'Bio LinkedIn', href: 'bio-linkedin', icon: User, category: 'IA' },
   { name: 'Organizador Estudos', href: 'organizador-estudos', icon: Brain, category: 'IA' },
+  { name: 'Gerador de Questões', href: 'gerador-questoes', icon: GraduationCap, category: 'IA' },
+  { name: 'Bio LinkedIn', href: 'bio-linkedin', icon: User, category: 'IA' },
   { name: 'Planner Semanal', href: 'planner-semanal', icon: Calendar, category: 'Produtividade' },
   { name: 'Streak Hábitos', href: 'streak-habitos', icon: CalendarClock, category: 'Produtividade' },
   { name: 'Checklist', href: 'checklist', icon: CheckSquare, category: 'Produtividade' },
