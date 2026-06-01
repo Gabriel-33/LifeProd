@@ -27,9 +27,10 @@ import {
 } from 'lucide-react';
 
 const tools = [
-  { name: 'Currículo IA', href: 'tools/curriculo-ia', icon: FileText, color: 'bg-blue-500', category: 'IA' },
+  { name: 'Currículo com IA', href: 'tools/curriculo-ia', icon: FileText, color: 'bg-blue-500', category: 'IA' },
+  { name: 'Gerador de Questões de Estudos', href: 'tools/gerador-questoes', icon: GraduationCap, color: 'bg-green-500', category: 'IA' },
+  { name: 'Organizador de Estudos', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
   { name: 'Bio LinkedIn', href: 'tools/bio-linkedin', icon: FolderGitIcon, color: 'bg-blue-700', category: 'IA' },
-  { name: 'Organizador Estudos', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
   { name: 'Planner Semanal', href: 'tools/planner-semanal', icon: Calendar, color: 'bg-orange-500', category: 'Produtividade' },
   { name: 'Checklist', href: 'tools/checklist', icon: CheckSquare, color: 'bg-teal-500', category: 'Produtividade' },
   { name: 'Streak de hábitos', href: 'tools/streak-habitos', icon: CalendarClock, color: 'bg-red-500', category: 'Produtividade' },
