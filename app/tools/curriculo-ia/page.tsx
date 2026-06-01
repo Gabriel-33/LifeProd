@@ -718,7 +718,7 @@ export default function CurriculoIAPage() {
       {/* Dica */}
       {!resultado && !loading && (
         <Card className="bg-gradient-to-r from-purple-50 to-blue-50">
-          <CardContent className="p-4"><p className="text-sm text-gray-600">💡 <span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
+          <CardContent className="p-4"><p className="text-sm text-gray-600"><span className="font-semibold">Dica:</span> Adicione suas experiências, formações e projetos. Quanto mais completo, melhor será o currículo gerado!</p></CardContent>
         </Card>
       )}
     </div>

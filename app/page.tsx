@@ -28,9 +28,9 @@ import {
 
 const tools = [
   { name: 'Currículo com IA', href: 'tools/curriculo-ia', icon: FileText, color: 'bg-blue-500', category: 'IA' },
-  { name: 'Gerador de Questões de Estudos', href: 'tools/gerador-questoes', icon: GraduationCap, color: 'bg-green-500', category: 'IA' },
-  { name: 'Organizador de Estudos', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
-  { name: 'Bio LinkedIn', href: 'tools/bio-linkedin', icon: FolderGitIcon, color: 'bg-blue-700', category: 'IA' },
+  { name: 'Questões para Estudo com IA', href: 'tools/gerador-questoes', icon: GraduationCap, color: 'bg-green-500', category: 'IA' },
+  { name: 'Estudos planejados com IA', href: 'tools/organizador-estudos', icon: Brain, color: 'bg-purple-500', category: 'IA' },
+  { name: 'Bio LinkedIn Gerada com IA', href: 'tools/bio-linkedin', icon: FolderGitIcon, color: 'bg-blue-700', category: 'IA' },
   { name: 'Planner Semanal', href: 'tools/planner-semanal', icon: Calendar, color: 'bg-orange-500', category: 'Produtividade' },
   { name: 'Checklist', href: 'tools/checklist', icon: CheckSquare, color: 'bg-teal-500', category: 'Produtividade' },
   { name: 'Streak de hábitos', href: 'tools/streak-habitos', icon: CalendarClock, color: 'bg-red-500', category: 'Produtividade' },
@@ -457,9 +457,9 @@ export default function Home() {
               <h3 className="font-semibold mb-4">Ferramentas</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="/tools/curriculo-ia" className="hover:text-white">Currículo IA</Link></li>
+                <li><Link href="/tools/gerador-questoes" className="hover:text-white">Questões com IA</Link></li>
                 <li><Link href="/tools/planner-semanal" className="hover:text-white">Planner Semanal</Link></li>
                 <li><Link href="/tools/streak-habitos" className="hover:text-white">Streak de Hábitos</Link></li>
-                <li><Link href="/tools/juros" className="hover:text-white">Calculadora Juros</Link></li>
                 <li><Link href="/tools/imc" className="hover:text-white">Calculadora IMC</Link></li>
               </ul>
             </div>

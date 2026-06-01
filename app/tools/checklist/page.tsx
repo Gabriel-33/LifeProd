@@ -388,7 +388,7 @@ export default function ChecklistPage() {
       <Card className="bg-gradient-to-r from-green-50 to-blue-50 w-full">
         <CardContent className="p-6">
           <p className="text-base text-gray-700">
-            💡 <span className="font-semibold">Dica:</span> Use prioridades para organizar suas tarefas mais importantes. 
+            <span className="font-semibold">Dica:</span> Use prioridades para organizar suas tarefas mais importantes. 
             As tarefas são salvas automaticamente no seu navegador e não serão perdidas ao fechar a página!
           </p>
         </CardContent>
