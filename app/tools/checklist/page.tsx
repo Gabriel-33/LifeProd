@@ -18,6 +18,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 
+const LIMITE_TAREFAS = 15;
+
 interface Tarefa {
   id: string;
   titulo: string;
@@ -32,13 +34,14 @@ export default function ChecklistPage() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [novaTarefa, setNovaTarefa] = useState('');
   const [prioridade, setPrioridade] = useState<'alta' | 'media' | 'baixa'>('media');
-  const [dataLimite, setDataLimite] = useState('');
+  const [dataLimite, setDataLimite] = useState<string | null>('');
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState<'todas' | 'ativas' | 'concluidas'>('todas');
 
   // Carregar tarefas do localStorage ao iniciar
   useEffect(() => {
     const tarefasSalvas = localStorage.getItem('lifeprod_checklist');
+    
     if (tarefasSalvas) {
       try {
         const parsed = JSON.parse(tarefasSalvas);
@@ -56,14 +59,25 @@ export default function ChecklistPage() {
     if (!loading) {
       localStorage.setItem('lifeprod_checklist', JSON.stringify(tarefas));
     }
+    
   }, [tarefas, loading]);
 
   function adicionarTarefa() {
+    
+    if(tarefas.length > LIMITE_TAREFAS){
+      alert(`Nessas versão podem ser adicionadas até ${LIMITE_TAREFAS} elementos a lista de tarefas!`);
+      return;
+    }
 
-    const isFormValid = novaTarefa.length > 0 && dataLimite.length > 0;
-
+    const isFormValid = novaTarefa.length > 0 && dataLimite != null && dataLimite.length > 0;
+    
     if (!isFormValid) {
       SetIsFormValid(false);
+      return;
+    }
+
+    if(!checarValidadeData(dataLimite)){
+      alert("A data precisa ser maior ou igual à data de hoje!");
       return;
     }
 
@@ -71,7 +85,7 @@ export default function ChecklistPage() {
 
     if (!novaTarefa.trim()) return;
 
-    const nova: Tarefa = {
+    const addNovaTarefa: Tarefa = {
       id: Date.now().toString(),
       titulo: novaTarefa,
       concluida: false,
@@ -79,10 +93,10 @@ export default function ChecklistPage() {
       dataCriacao: new Date().toISOString(),
       dataLimite: dataLimite || undefined
     };
-
-    setTarefas([nova, ...tarefas]);
+    
+    setTarefas([addNovaTarefa, ...tarefas]);
     setNovaTarefa('');
-    setDataLimite('');
+    setDataLimite(null);
     setPrioridade('media');
   }
 
@@ -130,7 +144,27 @@ export default function ChecklistPage() {
 
   function formatarData(dataString: string) {
     const data = new Date(dataString);
-    return data.toLocaleDateString('pt-BR');
+    return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+  }
+
+  function checarValidadeData(dataLimite: string){
+    
+    const dataLimiteObj = new Date(dataLimite);
+    const hoje = new Date();
+
+    hoje.setHours(0, 0, 0, 0);
+
+    const dataLimiteUTC = new Date(
+      dataLimiteObj.getUTCFullYear(),
+      dataLimiteObj.getUTCMonth(),
+      dataLimiteObj.getUTCDate()
+    );
+
+    if (dataLimiteUTC < hoje) {
+      return false;
+    }
+
+    return true;
   }
 
   const tarefasFiltradas = tarefas.filter(tarefa => {
@@ -217,7 +251,7 @@ export default function ChecklistPage() {
                   )}
                   placeholder="Dia/Mês/Ano"
                 />
-                {!isFormValid && dataLimite.length == 0 && <Label className='text-red-900'>Insira a data limite*</Label>}
+                {!isFormValid && dataLimite!=null && dataLimite.length == 0 && <Label className='text-red-900'>Insira a data limite*</Label>}
             </div>
 
             <Button onClick={adicionarTarefa} disabled={loading} className="w-full bg-green-600 hover:bg-green-700">
@@ -325,16 +359,16 @@ export default function ChecklistPage() {
                         {tarefa.titulo}
                       </p>
                       <div className="flex flex-wrap gap-3 mt-1 text-xs">
+                        {tarefa.dataLimite && (
+                          <span className="flex items-center gap-1 text-gray-500">
+                            Data limite: {formatarData(tarefa.dataLimite)}
+                            <Calendar className="w-3 h-3" />
+                          </span>
+                        )}
                         <span className="flex items-center gap-1">
                           {getPrioridadeIcon(tarefa.prioridade)}
                           <span className="text-gray-500">{getPrioridadeTexto(tarefa.prioridade)}</span>
                         </span>
-                        {tarefa.dataLimite && (
-                          <span className="flex items-center gap-1 text-gray-500">
-                            <Calendar className="w-3 h-3" />
-                            {formatarData(tarefa.dataLimite)}
-                          </span>
-                        )}
                         <span className="text-gray-400">
                           Criado: {formatarData(tarefa.dataCriacao)}
                         </span>

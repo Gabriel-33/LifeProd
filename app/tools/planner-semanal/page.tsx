@@ -414,17 +414,17 @@ export default function PlannerSemanalPage() {
                         }`}
                       >
                         <div className="flex items-start gap-2">
-                          <button
-                            onClick={() => toggleTarefa(diaIndex, tarefa.id)}
-                            className={`mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center ${
-                              tarefa.concluida
-                                ? 'bg-green-500 border-green-500'
-                                : 'border-gray-300 hover:border-green-500'
-                            }`}
-                          >
-                            {tarefa.concluida && <Check className="w-3 h-3 text-white" />}
-                          </button>
                           <div className="flex-1">
+                            <button
+                              onClick={() => toggleTarefa(diaIndex, tarefa.id)}
+                              className={`mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center ${
+                                tarefa.concluida
+                                  ? 'bg-green-500 border-green-500'
+                                  : 'border-gray-300 hover:border-green-500'
+                              }`}
+                            >
+                              
+                            </button>
                             <p className={`text-sm font-medium ${tarefa.concluida ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                               {tarefa.titulo}
                             </p>

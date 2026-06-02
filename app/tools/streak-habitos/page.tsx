@@ -105,28 +105,25 @@ export default function StreakHabitsPage() {
 
   // Calcular streak atual baseado no histórico
   function calcularStreak(habito: Habito): number {
-    const hoje = formatDate(new Date());
-    const dataInicio = habito.dataInicio;
+    const hoje = new Date();
+    // Forçamos a criação da data local substituindo o hífen por barra
+    const dataInicioObj = new Date(habito.dataInicio.replace(/-/g, '/'));
+
+    // Se a data de início for no futuro, retorna 0
+    if (dataInicioObj > hoje) return 0;
+
+    // Zera as horas de ambas para garantir precisão no cálculo de dias inteiros
+    hoje.setHours(0, 0, 0, 0);
+    dataInicioObj.setHours(0, 0, 0, 0);
+
+    // Calcula a diferença em milissegundos
+    const diferencaEmMilissegundos = hoje.getTime() - dataInicioObj.getTime();
     
-    // Se a data de início é futura, streak = 0
-    if (dataInicio > hoje) return 0;
-    
-    let streak = 0;
-    let dataAtual = createDate(hoje);
-    const dataInicioDate = createDate(dataInicio);
-    
-    // Verifica dias consecutivos a partir de hoje
-    while (dataAtual >= dataInicioDate) {
-      const dataStr = formatDate(dataAtual);
-      if (habito.historico[dataStr] === true) {
-        streak++;
-        dataAtual.setDate(dataAtual.getDate() - 1);
-      } else {
-        break;
-      }
-    }
-    
-    return streak;
+    // Converte milissegundos para dias inteiros (1 dia = 24h * 60m * 60s * 1000ms)
+    const diferencaEmDias = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
+
+    // +1 se você quiser considerar o próprio dia de início como dia 1 da sequência
+    return diferencaEmDias; 
   }
 
   // Verificar se pode fazer checkin hoje
@@ -227,9 +224,29 @@ export default function StreakHabitsPage() {
 
   // Renderizar calendário do hábito selecionado
   function renderizarCalendario(habito: Habito) {
-    const hoje = formatDate(new Date());
-    const dias = getDiasEntreDatas(habito.dataInicio, hoje);
-    // Agrupar por mês
+    // 1. Pegamos as datas de referência base
+    const dataInicioOriginal = createDate(habito.dataInicio);
+    const dataHojeOriginal = new Date();
+
+    // 2. Modificamos os limites: +1 dia na inicial, -1 dia na final
+    dataInicioOriginal.setDate(dataInicioOriginal.getDate());
+    dataHojeOriginal.setDate(dataHojeOriginal.getDate());
+
+    // 3. Convertemos de volta para o formato de string esperado pela sua função
+    const dataInicioAjustada = formatDate(dataInicioOriginal);
+    const dataFimAjustada = formatDate(dataHojeOriginal);
+
+    // Se após o ajuste a data de início for maior que a fim (ex: hábito criado hoje ou ontem),
+    // não há dias a renderizar no passado.
+    if (dataInicioAjustada > dataFimAjustada) {
+      return <div className="text-gray-500 text-sm">O histórico começará a aparecer amanhã!</div>;
+    }
+
+    // 4. Buscamos a lista de dias apenas nesse intervalo ajustado
+    const dias = getDiasEntreDatas(dataInicioAjustada, dataFimAjustada);
+    const hoje = formatDate(new Date()); // Guardamos o "hoje" real para a borda roxa
+    
+    // O agrupamento por mês continua IGUALzinho
     const meses: { [key: string]: { dias: string[]; nome: string } } = {};
     
     dias.forEach(dia => {
@@ -241,7 +258,7 @@ export default function StreakHabitsPage() {
       }
       meses[mesKey].dias.push(dia);
     });
-    
+  
     return (
       <div className="space-y-6">
         {Object.entries(meses).map(([key, mes]) => (
@@ -484,12 +501,8 @@ export default function StreakHabitsPage() {
               </h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Streak atual</p>
-                  <p className="text-2xl font-bold text-orange-600">{calcularStreak(habitoSelecionado)} dias</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Maior sequência</p>
-                  <p className="text-2xl font-bold text-green-600">{habitoSelecionado.maxStreak} dias</p>
+                  <p className="text-sm text-gray-600 justify-center">Streak atual</p>
+                  <p className="text-2xl font-bold text-orange-600 justify-center">{calcularStreak(habitoSelecionado)} dias</p>
                 </div>
               </div>
               {calcularStreak(habitoSelecionado) === 0 && habitoSelecionado.maxStreak === 0 && (
