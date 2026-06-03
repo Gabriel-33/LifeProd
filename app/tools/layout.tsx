@@ -12,7 +12,7 @@ import {
   CheckSquare,
   TrendingUp,
   Brain,
-  Menu,
+  Heart,
   X,
   User,
   Activity,
@@ -20,7 +20,8 @@ import {
   CirclePoundSterlingIcon,
   LayoutDashboard,
   TrendingDown,
-  GraduationCap
+  GraduationCap,
+  Utensils
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
@@ -34,7 +35,8 @@ const tools = [
   { name: 'Checklist', href: 'checklist', icon: CheckSquare, category: 'Produtividade' },
   { name: 'Controle de gastos', href: 'controle-gastos', icon: CirclePoundSterlingIcon, category: 'Financas' },
   { name: 'Calculadora Juros', href: 'juros', icon: TrendingUp, category: 'Financas' },
-  { name: 'Calculadora IMC', href: 'imc', icon: Activity, category: 'Utilidades' },
+  { name: 'Calculadora IMC', href: 'imc', icon: Activity, category: 'Saúde' },
+  { name: 'Refeições Diárias', href: 'refeicoes-diarias', icon: Utensils, category: 'Saúde' },
   { name: 'Contador Caracteres', href: 'contador-caracteres', icon: Type, category: 'Utilidades' },
 ];
 
@@ -68,13 +70,22 @@ const categories = [
     tools: tools.filter(t => t.category === 'Financas')
   },
   { 
+    id: 'saude', 
+    name: 'Saúde', 
+    icon: Heart, 
+    color: 'text-gray-600', 
+    bgColor: 'bg-gray-50',
+    hoverBg: 'hover:bg-gray-50',
+    tools: tools.filter(t => t.category === 'Saúde')
+  },
+  { 
     id: 'ferramentas', 
     name: 'Ferramentas', 
     icon: LayoutDashboard, 
     color: 'text-gray-600', 
     bgColor: 'bg-gray-50',
     hoverBg: 'hover:bg-gray-50',
-    tools: tools.filter(t => t.category === 'Saúde' || t.category === 'Utilidades')
+    tools: tools.filter(t => t.category === 'Utilidades')
   },
 ];
 
@@ -267,11 +278,39 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
                 </Link>
               ))}
 
-              {/* Categoria: Ferramentas (Saúde + Utilidades) */}
+              {/* Categoria: Saúde */}
+              <p className="text-xs font-semibold text-gray-400 uppercase px-3 mb-2 mt-4">
+                Saúde
+              </p>
+              {tools.filter(tool => tool.category === 'Saúde').map((tool) => (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className={`
+                    flex items-center space-x-3 px-3 py-2 rounded-lg transition
+                    ${pathname === tool.href 
+                      ? 'bg-blue-50 text-blue-700' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                    }
+                  `}
+                >
+                  <tool.icon className="w-5 h-5" />
+                  <span className="text-sm">{tool.name}</span>
+                  <span className={`
+                    text-xs px-1.5 py-0.5 rounded-full ml-auto
+                    ${'bg-emerald-100 text-emerald-700'
+                    }
+                  `}>
+                    Saúde
+                  </span>
+                </Link>
+              ))}
+
+              {/* Categoria: Utilidades */}
               <p className="text-xs font-semibold text-gray-400 uppercase px-3 mb-2 mt-4">
                 Ferramentas
               </p>
-              {tools.filter(tool => tool.category === 'Saúde' || tool.category === 'Utilidades').map((tool) => (
+              {tools.filter(tool => tool.category === 'Utilidades').map((tool) => (
                 <Link
                   key={tool.href}
                   href={tool.href}

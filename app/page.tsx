@@ -21,9 +21,10 @@ import {
   Sparkles,
   Flame,
   DollarSign,
-  HeartPulse,
+  Utensils,
   CirclePoundSterlingIcon,
-  GraduationCap
+  GraduationCap,
+  Heart
 } from 'lucide-react';
 
 const tools = [
@@ -36,7 +37,8 @@ const tools = [
   { name: 'Streak de hábitos', href: 'tools/streak-habitos', icon: CalendarClock, color: 'bg-red-500', category: 'Produtividade' },
   { name: 'Controle de gastos', href: 'tools/controle-gastos', icon: CirclePoundSterlingIcon, color: 'bg-green-500', category: 'Financas' },
   { name: 'Calculadora Juros', href: 'tools/juros', icon: TrendingUp, color: 'bg-green-500', category: 'Financas' },
-  { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'Utilidades' },
+  { name: 'Refeições diárias', href: 'tools/refeicoes-diarias', icon: Heart, color: 'bg-emerald-500', category: 'saude' },
+  { name: 'Calculadora IMC', href: 'tools/imc', icon: Activity, color: 'bg-emerald-500', category: 'saude' },
   { name: 'Contador Caracteres', href: 'tools/contador-caracteres', icon: Type, color: 'bg-gray-500', category: 'Utilidades' },
 ];
 
@@ -170,6 +172,32 @@ export default function Home() {
                     </CardHeader>
                     <CardContent>
                       <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-blue-700">Finanças</span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Utilidades */}
+          <div className="mb-12">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-1 h-8 bg-gray-500 rounded-full"></div>
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-800">Saúde</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {tools.filter(t => t.category === 'saude').map((tool) => (
+                <Link href={tool.href} key={tool.name}>
+                  <Card className="hover:shadow-lg transition cursor-pointer h-full">
+                    <CardHeader>
+                      <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg ${tool.color} flex items-center justify-center mb-3`}>
+                        <tool.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                      </div>
+                      <CardTitle className="text-base md:text-lg">{tool.name}</CardTitle>
+                      <CardDescription>Ferramentas rápidas</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-red-700">Saúde</span>
                     </CardContent>
                   </Card>
                 </Link>
@@ -395,31 +423,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Seção Saúde */}
-      <section id="saude" className="py-16 md:py-20 bg-white">
+      {/* Seção Refeições Diárias */}
+      <section id="saude" className="py-16 md:py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <HeartPulse className="w-5 h-5 text-emerald-600" />
+            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+              <Utensils className="w-5 h-5 text-orange-600" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">O que é IMC e como interpretar o seu resultado</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Controle suas refeições e mantenha uma alimentação equilibrada</h2>
           </div>
           <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
-            O Índice de Massa Corporal (IMC) é uma medida internacional usada para avaliar se o peso de uma pessoa está dentro de uma faixa saudável em relação à sua altura. Ele é calculado dividindo o peso (em kg) pelo quadrado da altura (em metros) e é amplamente utilizado por profissionais de saúde como um indicador inicial de risco.
-
-            Os resultados são classificados em faixas: abaixo de 18,5 indica abaixo do peso; entre 18,5 e 24,9, peso normal; entre 25 e 29,9, sobrepeso; acima de 30, algum grau de obesidade. É importante lembrar que o IMC é um indicador geral — fatores como massa muscular e biotipo não são considerados nesse cálculo.
-
-            Conhecer seu IMC é o primeiro passo para entender seu estado de saúde atual e tomar decisões mais conscientes sobre alimentação, exercício e qualidade de vida.
+            Manter uma alimentação saudável vai muito além de contar calorias — é sobre entender o que você está 
+            consumindo e como cada alimento contribui para sua saúde. Proteínas, carboidratos e gorduras têm papéis 
+            fundamentais no funcionamento do corpo, e equilibrar esses nutrientes é essencial para energia, 
+            disposição e bem-estar.
           </p>
-          <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+            Com o <strong>Gerenciador de Refeições Diárias</strong> do LifeProd, você cadastra até 6 alimentos, 
+            informa ou busca automaticamente suas informações nutricionais (proteínas, carboidratos e calorias por 100g), 
+            e monta suas refeições do dia — café da manhã, almoço, jantar e até lanches opcionais. Cada refeição 
+            pode ter até 4 alimentos, com horários personalizáveis e cálculo automático dos totais nutricionais.
+          </p>
+          <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-8">
+            Seja para acompanhar uma dieta específica, entender melhor sua alimentação ou simplesmente ter mais 
+            controle sobre o que você come, essa ferramenta foi feita para simplificar o processo e te ajudar a 
+            tomar decisões mais conscientes.
+          </p>
+          <div className="bg-orange-50 border border-orange-100 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-gray-800 text-lg">Calcule seu IMC agora</p>
-              <p className="text-gray-500 text-sm">Descubra sua classificação e o que ela significa para sua saúde.</p>
+              <p className="font-semibold text-gray-800 text-lg">Organize suas refeições agora</p>
+              <p className="text-gray-500 text-sm">Cadastre seus alimentos e monte o cardápio do seu dia.</p>
             </div>
-            <Link href="tools/imc">
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white whitespace-nowrap">
+            <Link href="tools/refeicoes-diarias">
+              <Button className="bg-orange-600 hover:bg-orange-700 text-white whitespace-nowrap">
                 <div className='flex'>
-                  Calcular IMC <ArrowRight className="ml-2 w-4 h-4" />
+                  Gerenciar refeições <ArrowRight className="ml-2 w-4 h-4" />
                 </div>
               </Button>
             </Link>
