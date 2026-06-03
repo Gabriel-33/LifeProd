@@ -128,7 +128,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
                 href={tool.href}
                 onClick={() => setActiveCategory(null)}
                 className={`
-                  flex items-center gap-3 px-4 py-3 border-b last:border-b-0 transition
+                  flex items-center gap-3 px-4 py-2 border-b last:border-b-0 transition
                   ${pathname === tool.href 
                     ? 'bg-blue-50 text-blue-700' 
                     : 'text-gray-700 hover:bg-gray-50'
@@ -352,7 +352,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
             <button
               key={category.id}
               onClick={() => toggleCategory(category.id)}
-              className={`flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-colors ${category.hoverBg}`}
+              className={`flex flex-col items-center gap-1 px-1 py-1 rounded-lg transition-colors ${category.hoverBg}`}
             >
               <category.icon className={`w-5 h-5 ${category.color}`} />
               <span className="text-xs text-gray-600">{category.name}</span>

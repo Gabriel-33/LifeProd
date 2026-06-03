@@ -194,7 +194,7 @@ export default function Home() {
                         <tool.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                       </div>
                       <CardTitle className="text-base md:text-lg">{tool.name}</CardTitle>
-                      <CardDescription>Ferramentas rápidas</CardDescription>
+                      <CardDescription>Se mantenha saudável!</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-red-700">Saúde</span>
